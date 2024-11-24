@@ -1,28 +1,62 @@
 # nestjs-metrics-client
 
-A global static Prometheus metrics reporter for NestJS applications. This package provides a simple and efficient way to
-report metrics from anywhere in your application without dependency injection.
+<div align="center">
 
-**This package is a lightweight and flexible alternative to the [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus) package, offering a global static reporter approach.**
+[![npm version](https://badge.fury.io/js/nestjs-metrics-client.svg)](https://badge.fury.io/js/nestjs-metrics-client)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org)
 
-## Features
+📊 A zero-dependency-injection Prometheus metrics reporter for NestJS applications
 
-- Global static reporter - no need for dependency injection
-- Support for Counter and Gauge metrics
-- Type-safe API
-- Easy integration with NestJS applications
-- Configurable default metrics
+[Key Features](#key-features) •
+[Quick Start](#quick-start) •
+[API Reference](#api-reference) •
+[Examples](#examples) •
+[Contributing](#contributing)
+
+</div>
+
+## Overview
+
+`nestjs-metrics-client` enables effortless metrics reporting from anywhere in your NestJS application without the complexity of dependency injection. It serves as a lightweight, type-safe alternative to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), focusing on simplicity and ease of use.
+
+```typescript
+// Report metrics from anywhere!
+ReporterService.counter('api_requests_total', { endpoint: '/users' });
+```
+
+## Key Features
+
+🌟 **Zero Dependency Injection** - Use a global static reporter to track metrics from any file
+
+🔒 **Type-Safe API** - Built with TypeScript for robust type checking and IDE support
+
+⚡ **High Performance** - Optimized for production environments with minimal overhead
+
+🛠️ **Flexible Configuration** - Support for both sync and async module configuration
+
+🎯 **Production Ready**
 - Built-in error handling
+- Default metrics collection
+- Support for Counter and Gauge metrics
+- Customizable labels
 
 ## Installation
 
 ```bash
+# Using npm
 npm install nestjs-metrics-client
+
+# Using yarn
+yarn add nestjs-metrics-client
+
+# Using pnpm
+pnpm add nestjs-metrics-client
 ```
 
 ## Quick Start
 
-1. Import the ReporterModule in your app.module.ts:
+### 1. Import the Module
 
 ```typescript
 import { ReporterModule } from 'nestjs-metrics-client';
@@ -32,7 +66,8 @@ import { ReporterModule } from 'nestjs-metrics-client';
     ReporterModule.forRoot({
       defaultMetricsEnabled: true,
       defaultLabels: {
-        app: 'my-app'
+        app: 'my-app',
+        environment: 'production'
       }
     }),
   ],
@@ -40,7 +75,7 @@ import { ReporterModule } from 'nestjs-metrics-client';
 export class AppModule {}
 ```
 
-2. Initialize the ReporterService in your main.ts:
+### 2. Initialize the Service
 
 ```typescript
 import { MetricsService, ReporterService } from 'nestjs-metrics-client';
@@ -56,43 +91,53 @@ async function bootstrap() {
 }
 ```
 
-3. Use the ReporterService anywhere in your application:
+### 3. Start Reporting Metrics
 
 ```typescript
 import { ReporterService } from 'nestjs-metrics-client';
 
 @Injectable()
-export class YourService {
-  someMethod() {
-    // Increment a counter
-    ReporterService.counter('my_counter', { label: 'value' });
+export class UserService {
+  async createUser() {
+    // Track user creation
+    ReporterService.counter('users_created_total', { 
+      source: 'api',
+      user_type: 'standard'
+    });
     
-    // Set a gauge value
-    ReporterService.gauge('my_gauge', 42, { label: 'value' });
+    // Track active users
+    ReporterService.gauge('active_users', 42, { 
+      region: 'us-east-1'
+    });
   }
 }
 ```
 
-4. Access metrics at `/metrics` endpoint.
-
-## API Documentation
+## API Reference
 
 ### ReporterService
 
-Static methods:
-- `init(metricsService: MetricsService)`: Initialize the reporter service
-- `counter(key: string, labels?: Record<string, string | number>)`: Increment a counter
-- `gauge(key: string, value: number, labels?: Record<string, string | number>)`: Set a gauge value
+Static methods for reporting metrics:
 
-### ReporterModule.forRoot(options)
+| Method | Description | Parameters |
+|--------|-------------|------------|
+| `init()` | Initialize the reporter service | `metricsService: MetricsService` |
+| `counter()` | Increment a counter | `key: string, labels?: Record<string, string \| number>` |
+| `gauge()` | Set a gauge value | `key: string, value: number, labels?: Record<string, string \| number>` |
 
-Options:
-- `defaultMetricsEnabled`: Enable default metrics collection (default: true)
-- `defaultLabels`: Default labels to add to all metrics (default: {})
+### Configuration Options
 
-### ReporterModule.forRootAsync(options)
+#### ReporterModule.forRoot(options)
 
-For dynamic configuration:
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `defaultMetricsEnabled` | `boolean` | `true` | Enable default metrics collection |
+| `defaultLabels` | `Record<string, string>` | `{}` | Labels added to all metrics |
+
+#### ReporterModule.forRootAsync(options)
+
+For dynamic configuration using factory providers:
+
 ```typescript
 ReporterModule.forRootAsync({
   imports: [ConfigModule],
@@ -106,40 +151,55 @@ ReporterModule.forRootAsync({
 })
 ```
 
-## Release
+## Examples
 
-This package uses semantic versioning via commit messages:
+### Monitor Queue Size
+
+```typescript
+@Injectable()
+export class QueueService {
+  private async checkQueueSize() {
+    const size = await this.queue.size();
+    ReporterService.gauge('queue_size', size, {
+      queue_name: 'email_notifications'
+    });
+  }
+}
+```
+
+## Release Process
+
+This package follows semantic versioning through commit messages:
 
 ### Version Bumping Commits
+
 ```bash
-# Patch Release (1.0.X)
-fix: message      # Bug fixes
-perf: message     # Performance improvements
+# Patch (1.0.X)
+fix: bug fix message
+perf: performance improvement
 
-# Minor Release (1.X.0)
-feat: message     # New features
+# Minor (1.X.0)
+feat: new feature message
 
-# Major Release (X.0.0)
-feat!: message            # Breaking change
-fix!: message             # Breaking change
-BREAKING CHANGE: message  # Breaking change anywhere in the commit body
+# Major (X.0.0)
+feat!: breaking change message
+BREAKING CHANGE: description in commit body
 ```
 
-### Non-Version Bumping Commits
-Only these specific types are allowed:
-```bash
-build: message    # Changes to build system or dependencies
-chore: message    # Maintenance tasks
-ci: message       # CI configuration files and scripts
-docs: message     # Documentation only
-perf: message     # Performance improvements
-refactor: message # Neither fixes a bug nor adds a feature
-style: message    # Code style (formatting, semicolons, etc)
-test: message     # Adding or correcting tests
-```
+### Other Valid Commit Types
 
-Any other prefix will cause the commit to be ignored by semantic-release and won't appear anywhere in release notes.
+- `build`: Changes to build system/dependencies
+- `chore`: Maintenance tasks
+- `ci`: CI configuration changes
+- `docs`: Documentation updates
+- `refactor`: Code refactoring
+- `style`: Code style changes
+- `test`: Test-related changes
 
 ## Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and development process.
+
+## License
+
+This project is licensed under the Apache License, Version 2.0 - see the [LICENSE](LICENSE) file for details.

@@ -1,24 +1,66 @@
 # Contributing to nestjs-metrics-client
 
-We love your input! We want to make contributing to nestjs-metrics-client as easy and transparent as possible, whether
-it's:
+🎉 Thank you for considering contributing to nestjs-metrics-client! This document outlines the basics you need to know.
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
-- Becoming a maintainer
+## Ways to Contribute
+
+- **Report Bugs**: Open an issue describing the bug and include steps to reproduce it
+- **Suggest Features**: Open an issue describing your proposed feature
+- **Submit Changes**: Fork the repo and submit a PR
+- **Improve Docs**: Fix typos, clarify explanations, add examples
 
 ## Development Process
 
-We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
+1. Fork and clone the repository
+   ```bash
+   git clone https://github.com/your-username/nestjs-metrics-client.git
+   ```
 
-1. Fork the repo and create your branch from `main`
-2. If you've added code that should be tested, add tests
-3. Ensure the test suite passes
-4. Make sure your code lints
-5. Issue that pull request :)
+2. Create a feature branch
+   ```bash
+   git checkout -b feature/your-feature
+   # or
+   git checkout -b fix/your-fix
+   ```
+
+3. Make your changes and test
+   ```bash
+   npm install
+   npm run test
+   npm run lint
+   ```
+
+4. Commit your changes using semantic commits
+   ```bash
+   # Features
+   git commit -m "feat: add new feature"
+   
+   # Bug fixes
+   git commit -m "fix: resolve issue"
+   
+   # Documentation
+   git commit -m "docs: update readme"
+   ```
+
+5. Push and open a PR
+   ```bash
+   git push origin feature/your-feature
+   ```
+
+## Pull Request Guidelines
+
+- Update documentation if needed
+- Add tests for new features
+- Maintain existing code style
+- Keep changes focused and atomic
+- Ensure all tests pass
+
+## Getting Help
+
+- 📝 Check existing issues and documentation
+- 💬 Open a discussion for questions
+- 📧 Contact maintainers if stuck
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under its Apache-2.0 License.
+By contributing, you agree that your contributions will be licensed under the Apache-2.0 License.
