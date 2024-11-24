@@ -9,10 +9,11 @@
 📊 A **zero-dependency-injection** alternative to Prometheus metrics solutions for NestJS.  
 Effortlessly report metrics from anywhere in your codebase without complex setup or dependency injection.
 
+[Overview](#overview) •
 [Quick Start](#quick-start) •
 [API Reference](#api-reference) •
-[Key Features](#key-features) •
-[Contributing](#contributing)
+[Contributing](#contributing) •
+[License](#license)
 
 </div>
 
@@ -26,7 +27,9 @@ npm install nestjs-metrics-client
 
 ## Overview
 
-`nestjs-metrics-client` is a lightweight, **zero-setup** alternative to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), eliminating the need for dependency injection or extensive configuration. With `nestjs-metrics-client`, you can instantly report metrics from anywhere in your application using a global static reporter, streamlining the integration process for modern NestJS applications.
+`nestjs-metrics-client` is a lightweight, **zero-setup** alternative to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), eliminating the need for dependency injection or extensive configuration.
+
+With `nestjs-metrics-client`, you can instantly report metrics from anywhere in your application using a global static reporter, streamlining the integration process for modern NestJS applications.
 
 ```typescript
 // Instantly report metrics without any dependency injection!
@@ -39,10 +42,10 @@ ReporterService.counter('api_requests_total', { endpoint: '/users' });
 ## Why Choose `nestjs-metrics-client`?
 
 🚀 **No Dependency Injection**  
-   Unlike traditional solutions, such as [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the need for cumbersome dependency injection, making your code cleaner and more portable.
+   Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the need for cumbersome dependency injection, making your code cleaner and more portable.
 
 🌟 **Effortless Integration**  
-   With zero setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the global `ReporterService`.
+   With minimal setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the global `ReporterService`.
 
 🎯 **Focus on Simplicity**  
    Designed for developers who want powerful metrics without the complexity of managing dependencies or boilerplate code.
@@ -64,7 +67,7 @@ import { ReporterModule } from 'nestjs-metrics-client';
       defaultMetricsEnabled: true,
       defaultLabels: {
         app: 'my-app',
-        environment: 'production'
+        environment: 'production',
       }
     }),
   ],
@@ -83,8 +86,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Initialize the global reporter
-  const metricsService = app.get(MetricsService);
-  ReporterService.init(metricsService);
+  ReporterService.init(app.get(MetricsService) );
 
   await app.listen(3000);
 }
@@ -153,19 +155,6 @@ ReporterModule.forRootAsync({
 });
 ```
 
----
-
-## Key Features
-
-- Alternative to @willsoto/nestjs-prometheus - Simplify metrics reporting without tying your application to dependency injection.
-
-- Zero Dependency Injection - Use a global static reporter, freeing you from injection complexity.
-
-- Zero Setup - No need for intricate module configurations—just initialize and start tracking.
-
-- Type-Safe API - Built with TypeScript to provide robust type checking and IDE support.
-
-- Comprehensive Metric Types - Supports Counter, Gauge, Histogram, and Summary metrics with customizable labels and options.
 ---
 
 ## Contributing
