@@ -22,38 +22,37 @@ npm install nestjs-metrics-client
 
 ## Quick Start
 
-1. Import the MetricsModule in your app.module.ts:
+1. Import the ReporterModule in your app.module.ts:
 
 ```typescript
-import { MetricsModule } from 'nestjs-metrics-client';
+import { ReporterModule } from 'nestjs-metrics-client';
 
-@Module( {
-     imports: [
-          MetricsModule.forRoot( {
-               defaultMetricsEnabled: true,
-               defaultLabels: {
-                    app: 'my-app'
-               }
-          } ),
-     ],
-} )
-export class AppModule {
-}
+@Module({
+  imports: [
+    ReporterModule.forRoot({
+      defaultMetricsEnabled: true,
+      defaultLabels: {
+        app: 'my-app'
+      }
+    }),
+  ],
+})
+export class AppModule {}
 ```
 
 2. Initialize the ReporterService in your main.ts:
 
 ```typescript
-import { ReporterService } from 'nestjs-metrics-client';
+import { MetricsService, ReporterService } from 'nestjs-metrics-client';
 
 async function bootstrap() {
-     const app = await NestFactory.create( AppModule );
-     
-     // Initialize the reporter service
-     const metricsService = app.get( MetricsService );
-     ReporterService.init( metricsService );
-     
-     await app.listen( 3000 );
+  const app = await NestFactory.create(AppModule);
+  
+  // Initialize the reporter service
+  const metricsService = app.get(MetricsService);
+  ReporterService.init(metricsService);
+  
+  await app.listen(3000);
 }
 ```
 
@@ -64,35 +63,83 @@ import { ReporterService } from 'nestjs-metrics-client';
 
 @Injectable()
 export class YourService {
-     someMethod() {
-          // Increment a counter
-          ReporterService.counter( 'my_counter', { label: 'value' } );
-          
-          // Set a gauge value
-          ReporterService.gauge( 'my_gauge', 42, { label: 'value' } );
-     }
+  someMethod() {
+    // Increment a counter
+    ReporterService.counter('my_counter', { label: 'value' });
+    
+    // Set a gauge value
+    ReporterService.gauge('my_gauge', 42, { label: 'value' });
+  }
 }
 ```
 
-## Documentation
+4. Access metrics at `/metrics` endpoint.
+
+## API Documentation
 
 ### ReporterService
 
 Static methods:
-
 - `init(metricsService: MetricsService)`: Initialize the reporter service
 - `counter(key: string, labels?: Record<string, string | number>)`: Increment a counter
 - `gauge(key: string, value: number, labels?: Record<string, string | number>)`: Set a gauge value
 
-### MetricsModule.forRoot(options)
+### ReporterModule.forRoot(options)
 
 Options:
-
 - `defaultMetricsEnabled`: Enable default metrics collection (default: true)
 - `defaultLabels`: Default labels to add to all metrics (default: {})
-- `path`: Path for metrics endpoint (default: '/metrics')
+
+### ReporterModule.forRootAsync(options)
+
+For dynamic configuration:
+```typescript
+ReporterModule.forRootAsync({
+  imports: [ConfigModule],
+  useFactory: (configService: ConfigService) => ({
+    defaultLabels: {
+      app: configService.get('APP_NAME'),
+      env: configService.get('NODE_ENV')
+    }
+  }),
+  inject: [ConfigService]
+})
+```
+
+## Release
+
+This package uses semantic versioning via commit messages:
+
+### Version Bumping Commits
+```bash
+# Patch Release (1.0.X)
+fix: message      # Bug fixes
+perf: message     # Performance improvements
+
+# Minor Release (1.X.0)
+feat: message     # New features
+
+# Major Release (X.0.0)
+feat!: message            # Breaking change
+fix!: message             # Breaking change
+BREAKING CHANGE: message  # Breaking change anywhere in the commit body
+```
+
+### Non-Version Bumping Commits
+Only these specific types are allowed:
+```bash
+build: message    # Changes to build system or dependencies
+chore: message    # Maintenance tasks
+ci: message       # CI configuration files and scripts
+docs: message     # Documentation only
+perf: message     # Performance improvements
+refactor: message # Neither fixes a bug nor adds a feature
+style: message    # Code style (formatting, semicolons, etc)
+test: message     # Adding or correcting tests
+```
+
+Any other prefix will cause the commit to be ignored by semantic-release and won't appear anywhere in release notes.
 
 ## Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and
-the process for submitting pull requests.
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.

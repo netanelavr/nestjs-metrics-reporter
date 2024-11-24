@@ -11,12 +11,11 @@
     "build": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:debug": "jest debug --runInBand --detectOpenHandles",
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint . --ext .ts --fix",
     "clean": "rimraf dist",
-    "prepare": "npm run build"
+    "semantic-release": "semantic-release"
   },
   "keywords": [
     "nestjs",
@@ -57,5 +56,20 @@
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2",
     "typescript": "5.3"
+  },
+  "dependencies": {
+    "semantic-release": "^24.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "release": {
+    "branches": ["main"],
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/npm",
+      "@semantic-release/github"
+    ]
   }
 }

@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MetricsService } from '../src/metrics/metrics.service';
+import { MetricsService } from '../src';
 import { Registry } from 'prom-client';
 
 describe('MetricsService', () => {
