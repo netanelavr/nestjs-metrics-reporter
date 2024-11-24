@@ -6,58 +6,54 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org)
 
-📊 A zero-dependency-injection Prometheus metrics reporter for NestJS applications.
-Report metrics from anywhere in your codebase without the complexity of dependency injection.
+📊 A **zero-dependency-injection** alternative to Prometheus metrics solutions for NestJS.  
+Effortlessly report metrics from anywhere in your codebase without complex setup or dependency injection.
 
-[Key Features](#key-features) •
 [Quick Start](#quick-start) •
 [API Reference](#api-reference) •
-[Examples](#examples) •
+[Key Features](#key-features) •
 [Contributing](#contributing)
 
 </div>
 
-## Overview
-
-`nestjs-metrics-client` enables effortless metrics reporting from anywhere in your NestJS application without the complexity of dependency injection. It serves as a lightweight, type-safe alternative to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), focusing on simplicity and ease of use.
-
-```typescript
-// Report metrics from anywhere!
-ReporterService.counter('api_requests_total', { endpoint: '/users' });
-```
-
-## Key Features
-
-🌟 **Zero Dependency Injection** - Use a global static reporter to track metrics from any file
-
-🔒 **Type-Safe API** - Built with TypeScript for robust type checking and IDE support
-
-⚡ **High Performance** - Optimized for production environments with minimal overhead
-
-🛠️ **Flexible Configuration** - Support for both sync and async module configuration
-
-🎯 **Production Ready**
-- Built-in error handling
-- Default metrics collection
-- Support for Counter, Gauge, Histogram, and Summary metrics
-- Customizable labels and buckets/percentiles
 
 ## Installation
 
 ```bash
-# Using npm
 npm install nestjs-metrics-client
-
-# Using yarn
-yarn add nestjs-metrics-client
-
-# Using pnpm
-pnpm add nestjs-metrics-client
 ```
+---
+
+## Overview
+
+`nestjs-metrics-client` is a lightweight, **zero-setup** alternative to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), eliminating the need for dependency injection or extensive configuration. With `nestjs-metrics-client`, you can instantly report metrics from anywhere in your application using a global static reporter, streamlining the integration process for modern NestJS applications.
+
+```typescript
+// Instantly report metrics without any dependency injection!
+import { ReporterService } from 'nestjs-metrics-client';
+
+ReporterService.counter('api_requests_total', { endpoint: '/users' });
+```
+---
+
+## Why Choose `nestjs-metrics-client`?
+
+🚀 **No Dependency Injection**  
+   Unlike traditional solutions, such as [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the need for cumbersome dependency injection, making your code cleaner and more portable.
+
+🌟 **Effortless Integration**  
+   With zero setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the global `ReporterService`.
+
+🎯 **Focus on Simplicity**  
+   Designed for developers who want powerful metrics without the complexity of managing dependencies or boilerplate code.
+
+---
 
 ## Quick Start
 
-### 1. Import the Module
+### 1. Import and Configure the Module
+
+Minimal setup required! Just import the `ReporterModule` in your `AppModule`.
 
 ```typescript
 import { ReporterModule } from 'nestjs-metrics-client';
@@ -76,23 +72,27 @@ import { ReporterModule } from 'nestjs-metrics-client';
 export class AppModule {}
 ```
 
-### 2. Initialize the Service
+### 2. Initialize the Global Reporter
+
+Easily initialize the global `ReporterService` in your bootstrap function. No additional injections required.
 
 ```typescript
 import { MetricsService, ReporterService } from 'nestjs-metrics-client';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  
-  // Initialize the reporter service
+
+  // Initialize the global reporter
   const metricsService = app.get(MetricsService);
   ReporterService.init(metricsService);
-  
+
   await app.listen(3000);
 }
 ```
 
-### 3. Start Reporting Metrics
+### 3. Report Metrics Anywhere
+
+Once initialized, you can start reporting metrics instantly from anywhere in your application.
 
 ```typescript
 import { ReporterService } from 'nestjs-metrics-client';
@@ -100,109 +100,82 @@ import { ReporterService } from 'nestjs-metrics-client';
 @Injectable()
 export class UserService {
   async createUser() {
-    // Track user creation
-    ReporterService.counter('users_created_total', { 
+    // Increment user creation counter
+    ReporterService.counter('users_created_total', {
       source: 'api',
       user_type: 'standard'
     });
-    
-    // Track active users
-    ReporterService.gauge('active_users', 42, { 
+
+    // Update active user gauge
+    ReporterService.gauge('active_users', 42, {
       region: 'us-east-1'
     });
   }
 }
 ```
+---
 
 ## API Reference
 
-### ReporterService
+### `ReporterService`
 
-Static methods for reporting metrics:
+The global static service for reporting metrics:
 
-| Method | Description | Parameters |
-|--------|-------------|------------|
-| `init()` | Initialize the reporter service | `metricsService: MetricsService` |
-| `counter()` | Increment a counter | `key: string, labels?: Record<string, string \| number>` |
-| `gauge()` | Set a gauge value | `key: string, value: number, labels?: Record<string, string \| number>` |
-| `histogram()` | Observe a histogram value | `key: string, value: number, labels?: Record<string, string \| number>, buckets?: number[]` |
-| `summary()` | Observe a summary value | `key: string, value: number, labels?: Record<string, string \| number>, percentiles?: number[]` |
+| Method       | Description                 | Parameters                                                  |
+|--------------|-----------------------------|-------------------------------------------------------------|
+| `init()`     | Initialize the reporter     | `metricsService: MetricsService`                           |
+| `counter()`  | Increment a counter metric  | `key: string, labels?: Record<string, string | number>`     |
+| `gauge()`    | Set a gauge value           | `key: string, value: number, labels?: Record<string, string | number>` |
+| `histogram()`| Record a histogram value    | `key: string, value: number, labels?: Record<string, string | number>, buckets?: number[]` |
+| `summary()`  | Record a summary value      | `key: string, value: number, labels?: Record<string, string | number>, percentiles?: number[]` |
 
-### Configuration Options
+### Module Configuration
 
-#### ReporterModule.forRoot(options)
+#### `ReporterModule.forRoot(options)`
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `defaultMetricsEnabled` | `boolean` | `true` | Enable default metrics collection |
-| `defaultLabels` | `Record<string, string>` | `{}` | Labels added to all metrics |
+| Option                  | Type                       | Default    | Description                                   |
+|-------------------------|----------------------------|------------|-----------------------------------------------|
+| `defaultMetricsEnabled` | `boolean`                 | `true`     | Enable collection of default metrics          |
+| `defaultLabels`         | `Record<string, string>`  | `{}`       | Labels automatically added to all metrics     |
 
-#### ReporterModule.forRootAsync(options)
+#### `ReporterModule.forRootAsync(options)`
 
-For dynamic configuration using factory providers:
+Supports dynamic configuration with factory providers:
 
 ```typescript
 ReporterModule.forRootAsync({
-  imports: [ConfigModule],
-  useFactory: (configService: ConfigService) => ({
+  useFactory: () => ({
     defaultLabels: {
-      app: configService.get('APP_NAME'),
-      env: configService.get('NODE_ENV')
-    }
+      app: process.env.APP_NAME || 'default-app',
+      environment: process.env.NODE_ENV || 'development',
+    },
   }),
-  inject: [ConfigService]
-})
+});
 ```
 
-## Examples
+---
 
-### Monitor Queue Size
+## Key Features
 
-```typescript
-@Injectable()
-export class QueueService {
-  private async checkQueueSize() {
-    const size = await this.queue.size();
-    ReporterService.gauge('queue_size', size, {
-      queue_name: 'email_notifications'
-    });
-  }
-}
-```
+- Alternative to @willsoto/nestjs-prometheus - Simplify metrics reporting without tying your application to dependency injection.
 
-## Release Process
+- Zero Dependency Injection - Use a global static reporter, freeing you from injection complexity.
 
-This package follows semantic versioning through commit messages:
+- Zero Setup - No need for intricate module configurations—just initialize and start tracking.
 
-### Version Bumping Commits
+- Type-Safe API - Built with TypeScript to provide robust type checking and IDE support.
 
-```bash
-# Patch (1.0.X)
-fix: bug fix message
-perf: performance improvement
-
-# Minor (1.X.0)
-feat: new feature message
-
-# Major (X.0.0)
-feat!: breaking change message
-BREAKING CHANGE: description in commit body
-```
-
-### Other Valid Commit Types
-
-- `build`: Changes to build system/dependencies
-- `chore`: Maintenance tasks
-- `ci`: CI configuration changes
-- `docs`: Documentation updates
-- `refactor`: Code refactoring
-- `style`: Code style changes
-- `test`: Test-related changes
+- Comprehensive Metric Types - Supports Counter, Gauge, Histogram, and Summary metrics with customizable labels and options.
+---
 
 ## Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and development process.
+Contributions are welcome! Please check out our [Contributing Guide](CONTRIBUTING.md) to get started.
 
 ## License
 
 This project is licensed under the Apache License, Version 2.0 - see the [LICENSE](LICENSE) file for details.
+
+---
+
+`nestjs-metrics-client` provides a modern, **zero-dependency-injection** alternative to traditional NestJS metrics tools like `@willsoto/nestjs-prometheus`. Try it today for a simpler, more powerful metrics solution!
