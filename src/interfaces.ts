@@ -1,4 +1,4 @@
 export interface MetricsConfig {
-     defaultLabels?: Record<string, string>;
-     defaultMetricsEnabled?: boolean;
+	defaultLabels?: Record<string, string>;
+	defaultMetricsEnabled?: boolean;
 }
