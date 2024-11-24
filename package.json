@@ -58,13 +58,16 @@
     "typescript": "5.3"
   },
   "dependencies": {
+    "@nestjs/swagger": "^8.0.7",
     "semantic-release": "^24.0.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "release": {
-    "branches": ["main"],
+    "branches": [
+      "main"
+    ],
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
