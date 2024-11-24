@@ -40,13 +40,15 @@
     "url": "https://github.com/netanelavr/nestjs-metrics-client/issues"
   },
   "homepage": "https://github.com/netanelavr/nestjs-metrics-client#readme",
-  "peerDependencies": {
+  "dependencies": {
     "@nestjs/common": "^8.0.0 || ^9.0.0 || ^10.0.0",
+    "@nestjs/swagger": "^8.0.7",
     "@nestjs/core": "^8.0.0 || ^9.0.0 || ^10.0.0",
     "prom-client": "^14.0.0"
   },
   "devDependencies": {
     "@nestjs/testing": "^10.0.0",
+    "semantic-release": "^24.0.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -56,10 +58,6 @@
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.2",
     "typescript": "5.3"
-  },
-  "dependencies": {
-    "@nestjs/swagger": "^8.0.7",
-    "semantic-release": "^24.0.0"
   },
   "publishConfig": {
     "access": "public"
