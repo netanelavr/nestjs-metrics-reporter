@@ -1,14 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es2020",
     "module": "commonjs",
     "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "es2021",
+    "sourceMap": true,
     "outDir": "./dist",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node"
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true
   },
   "include": ["src"],
   "exclude": ["node_modules", "dist", "**/*.test.ts"]
