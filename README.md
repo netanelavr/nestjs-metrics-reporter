@@ -3,6 +3,8 @@
 A global static Prometheus metrics reporter for NestJS applications. This package provides a simple and efficient way to
 report metrics from anywhere in your application without dependency injection.
 
+**This package is a lightweight and flexible alternative to the [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus) package, offering a global static reporter approach.**
+
 ## Features
 
 - Global static reporter - no need for dependency injection

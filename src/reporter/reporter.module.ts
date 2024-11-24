@@ -1,46 +1,75 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
-import { MetricsModule } from '../metrics/metrics.module';
-import { ReporterOptions } from '../interfaces';
+import { ReporterService } from './reporter.service';
+import { collectDefaultMetrics, Registry } from 'prom-client';
+import { MetricsConfig } from '../interfaces';
+import { MetricsService } from '../metrics/metrics.service';
+import { MetricsController } from '../metrics/metrics.controller';
 
 @Global()
 @Module( {} )
 export class ReporterModule {
-	static forRoot( options: ReporterOptions = {} ): DynamicModule {
+	static forRoot( config: MetricsConfig = {} ): DynamicModule {
+		const registry = new Registry();
+          
+		if ( config.defaultLabels ) {
+			registry.setDefaultLabels( config.defaultLabels );
+		}
+          
+		if ( config.defaultMetricsEnabled !== false ) {
+			collectDefaultMetrics( { register: registry } );
+		}
+          
 		return {
 			module: ReporterModule,
-			imports: [ MetricsModule.forRoot() ],
 			providers: [
 				{
-					provide: 'REPORTER_OPTIONS',
-					useValue: {
-						logErrors: true,
-						defaultLabels: {},
-						...options,
-					},
+					provide: Registry,
+					useValue: registry
 				},
+				MetricsService,
+				ReporterService
 			],
-			exports: [],
-			global: true,
+			controllers: [ MetricsController ],
+			exports: [ ReporterService ]
 		};
 	}
      
 	static forRootAsync( options: {
           imports?: any[];
-          useFactory: ( ...args: any[] ) => Promise<ReporterOptions> | ReporterOptions;
+          useFactory: ( ...args: any[] ) => Promise<MetricsConfig> | MetricsConfig;
           inject?: any[];
      } ): DynamicModule {
 		return {
 			module: ReporterModule,
-			imports: [ ...( options.imports || [] ), MetricsModule.forRoot() ],
+			imports: options.imports,
 			providers: [
 				{
-					provide: 'REPORTER_OPTIONS',
+					provide: 'CONFIG_OPTIONS',
 					useFactory: options.useFactory,
-					inject: options.inject || [],
+					inject: options.inject,
 				},
+				{
+					provide: Registry,
+					useFactory: async ( config: MetricsConfig ) => {
+						const registry = new Registry();
+                              
+						if ( config.defaultLabels ) {
+							registry.setDefaultLabels( config.defaultLabels );
+						}
+                              
+						if ( config.defaultMetricsEnabled !== false ) {
+							collectDefaultMetrics( { register: registry } );
+						}
+                              
+						return registry;
+					},
+					inject: [ 'CONFIG_OPTIONS' ],
+				},
+				MetricsService,
+				ReporterService
 			],
-			exports: [],
-			global: true,
+			controllers: [ MetricsController ],
+			exports: [ ReporterService ]
 		};
 	}
 }

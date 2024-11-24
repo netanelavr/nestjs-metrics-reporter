@@ -6,7 +6,8 @@ export class MetricsService {
 	private readonly counter: { [ key: string ]: Counter<string> } = {};
 	private readonly gauge: { [ key: string ]: Gauge<string> } = {};
      
-	constructor( @Inject( Registry ) private readonly registry: Registry ) {}
+	constructor( @Inject( Registry ) private readonly registry: Registry ) {
+	}
      
 	public incCounter( key: string, labels?: Record<string, string | number> ): void {
 		if ( ! this.counter[ key ] ) {
@@ -17,7 +18,7 @@ export class MetricsService {
 				registers: [ this.registry ],
 			} );
 		}
-		this.counter[ key ].inc( labels );
+		this.counter[ key ].inc( labels || {} );
 	}
      
 	public setGauge( key: string, value: number, labels?: Record<string, string | number> ): void {
@@ -29,6 +30,6 @@ export class MetricsService {
 				registers: [ this.registry ],
 			} );
 		}
-		this.gauge[ key ].set( labels, value );
+		this.gauge[ key ].set( labels || {}, value );
 	}
 }

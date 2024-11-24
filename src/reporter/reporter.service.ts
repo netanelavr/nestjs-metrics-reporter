@@ -1,52 +1,37 @@
-import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { MetricsService } from '../metrics/metrics.service';
-import { ReporterOptions } from '../interfaces';
 
-
-@Injectable()
 export class ReporterService {
 	private static readonly logger = new Logger( ReporterService.name );
 	private static metricsService: MetricsService;
-	private static options: ReporterOptions;
      
-	static init( metricsService: MetricsService, @Optional() @Inject( 'REPORTER_OPTIONS' ) options: ReporterOptions = {} ): void {
+	static init( metricsService: MetricsService ): void {
 		ReporterService.metricsService = metricsService;
-		ReporterService.options = {
-			logErrors: true,
-			defaultLabels: {},
-			...options,
-		};
 	}
      
-	static counter( key: string, labels: Record<string, string | number> = {} ): void {
+	static counter( key: string, labels?: Record<string, string | number> ): void {
+		this.validateMetricsService();
+
 		try {
-			const finalLabels = {
-				...this.options?.defaultLabels,
-				...labels,
-			};
-			ReporterService.metricsService.incCounter( key, finalLabels );
-		} catch ( e ) {
-			if ( this.options?.logErrors ) {
-				this.logger.error( `Error while incrementing counter - ${ key }`, e );
-			}
+			ReporterService.metricsService.incCounter( key, labels );
+		} catch ( error ) {
+			this.logger.error( `Error while incrementing counter - ${ key }`, error );
 		}
 	}
      
-	static gauge( key: string, value: number, labels: Record<string, string | number> = {} ): void {
+	static gauge( key: string, value: number, labels?: Record<string, string | number> ): void {
+		this.validateMetricsService();
+
 		try {
-			const finalLabels = {
-				...this.options?.defaultLabels,
-				...labels,
-			};
-			ReporterService.metricsService.setGauge( key, value, finalLabels );
-		} catch ( e ) {
-			if ( this.options?.logErrors ) {
-				this.logger.error( `Error while setting gauge - ${ key }, ${ value }`, e );
-			}
+			ReporterService.metricsService.setGauge( key, value, labels );
+		} catch ( error ) {
+			this.logger.error( `Error while setting gauge - ${ key }, ${ value }`, error );
 		}
 	}
-     
-	static hasBeenInitialized(): boolean {
-		return !! ReporterService.metricsService;
+	
+	private static validateMetricsService(): void {
+		if (!ReporterService.metricsService) {
+			throw new Error('MetricsService is not initialized.');
+		}
 	}
 }
