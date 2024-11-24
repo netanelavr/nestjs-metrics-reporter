@@ -57,7 +57,7 @@
   "devDependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
-    "@nestjs/swagger": "^8.0.7",
+    "@nestjs/swagger": "^7.0.4",
     "@nestjs/testing": "^10.0.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
