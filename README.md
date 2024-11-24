@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org)
 
-📊 A zero-dependency-injection Prometheus metrics reporter for NestJS applications. 
+📊 A zero-dependency-injection Prometheus metrics reporter for NestJS applications.
 Report metrics from anywhere in your codebase without the complexity of dependency injection.
 
 [Key Features](#key-features) •
@@ -39,8 +39,8 @@ ReporterService.counter('api_requests_total', { endpoint: '/users' });
 🎯 **Production Ready**
 - Built-in error handling
 - Default metrics collection
-- Support for Counter and Gauge metrics
-- Customizable labels
+- Support for Counter, Gauge, Histogram, and Summary metrics
+- Customizable labels and buckets/percentiles
 
 ## Installation
 
@@ -125,6 +125,8 @@ Static methods for reporting metrics:
 | `init()` | Initialize the reporter service | `metricsService: MetricsService` |
 | `counter()` | Increment a counter | `key: string, labels?: Record<string, string \| number>` |
 | `gauge()` | Set a gauge value | `key: string, value: number, labels?: Record<string, string \| number>` |
+| `histogram()` | Observe a histogram value | `key: string, value: number, labels?: Record<string, string \| number>, buckets?: number[]` |
+| `summary()` | Observe a summary value | `key: string, value: number, labels?: Record<string, string \| number>, percentiles?: number[]` |
 
 ### Configuration Options
 
