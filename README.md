@@ -1,4 +1,4 @@
-# nestjs-global-reporter
+# nestjs-metrics-client
 
 A global static Prometheus metrics reporter for NestJS applications. This package provides a simple and efficient way to
 report metrics from anywhere in your application without dependency injection.
@@ -15,7 +15,7 @@ report metrics from anywhere in your application without dependency injection.
 ## Installation
 
 ```bash
-npm install nestjs-global-reporter
+npm install nestjs-metrics-client
 ```
 
 ## Quick Start
@@ -23,7 +23,7 @@ npm install nestjs-global-reporter
 1. Import the MetricsModule in your app.module.ts:
 
 ```typescript
-import { MetricsModule } from 'nestjs-global-reporter';
+import { MetricsModule } from 'nestjs-metrics-client';
 
 @Module( {
      imports: [
@@ -42,7 +42,7 @@ export class AppModule {
 2. Initialize the ReporterService in your main.ts:
 
 ```typescript
-import { ReporterService } from 'nestjs-global-reporter';
+import { ReporterService } from 'nestjs-metrics-client';
 
 async function bootstrap() {
      const app = await NestFactory.create( AppModule );
@@ -58,7 +58,7 @@ async function bootstrap() {
 3. Use the ReporterService anywhere in your application:
 
 ```typescript
-import { ReporterService } from 'nestjs-global-reporter';
+import { ReporterService } from 'nestjs-metrics-client';
 
 @Injectable()
 export class YourService {

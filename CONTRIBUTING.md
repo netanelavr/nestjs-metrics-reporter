@@ -1,6 +1,6 @@
-# Contributing to nestjs-global-reporter
+# Contributing to nestjs-metrics-client
 
-We love your input! We want to make contributing to nestjs-global-reporter as easy and transparent as possible, whether
+We love your input! We want to make contributing to nestjs-metrics-client as easy and transparent as possible, whether
 it's:
 
 - Reporting a bug
