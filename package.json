@@ -1,13 +1,17 @@
 {
   "name": "nestjs-metrics-client",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "A global static Prometheus metrics reporter for NestJS applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=16.0.0"
+  },
   "scripts": {
+    "prebuild": "rimraf dist",
     "build": "tsc",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -15,6 +19,8 @@
     "lint": "eslint 'src/**/*.ts'",
     "lint:fix": "eslint . --ext .ts --fix",
     "clean": "rimraf dist",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build",
     "semantic-release": "semantic-release"
   },
   "keywords": [
@@ -41,22 +47,27 @@
   },
   "homepage": "https://github.com/netanelavr/nestjs-metrics-client#readme",
   "dependencies": {
-    "@nestjs/common": "^8.0.0 || ^9.0.0 || ^10.0.0",
-    "@nestjs/swagger": "^8.0.7",
-    "@nestjs/core": "^8.0.0 || ^9.0.0 || ^10.0.0",
     "prom-client": "^14.0.0"
   },
+  "peerDependencies": {
+    "@nestjs/common": "^8.0.0 || ^9.0.0 || ^10.0.0",
+    "@nestjs/core": "^8.0.0 || ^9.0.0 || ^10.0.0",
+    "@nestjs/swagger": "^8.0.7"
+  },
   "devDependencies": {
+    "@nestjs/common": "^10.0.0",
+    "@nestjs/core": "^10.0.0",
+    "@nestjs/swagger": "^8.0.7",
     "@nestjs/testing": "^10.0.0",
-    "semantic-release": "^24.0.0",
     "@types/jest": "^29.5.0",
     "@types/node": "^20.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
     "jest": "^29.5.0",
+    "rimraf": "^5.0.0",
+    "semantic-release": "^24.0.0",
     "ts-jest": "^29.1.0",
-    "ts-node": "^10.9.2",
     "typescript": "5.3"
   },
   "publishConfig": {
