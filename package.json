@@ -68,6 +68,7 @@
     "rimraf": "^5.0.0",
     "semantic-release": "^24.0.0",
     "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.2",
     "typescript": "5.3"
   },
   "publishConfig": {
