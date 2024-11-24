@@ -6,7 +6,8 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org)
 
-📊 A zero-dependency-injection Prometheus metrics reporter for NestJS applications
+📊 A zero-dependency-injection Prometheus metrics reporter for NestJS applications. 
+Report metrics from anywhere in your codebase without the complexity of dependency injection.
 
 [Key Features](#key-features) •
 [Quick Start](#quick-start) •
