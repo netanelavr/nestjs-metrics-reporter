@@ -28,11 +28,9 @@ npm install nestjs-metrics-client
 ## Overview
 
 `nestjs-metrics-client` is a lightweight, **zero-setup** alternative to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), eliminating the need for dependency injection or extensive configuration.
-
-With `nestjs-metrics-client`, you can instantly report metrics from anywhere in your application using a global static reporter, streamlining the integration process for modern NestJS applications.
+Instantly report metrics from anywhere in your application using a global static reporter.
 
 ```typescript
-// Instantly report metrics without any dependency injection!
 import { ReporterService } from 'nestjs-metrics-client';
 
 ReporterService.counter('api_requests_total', { endpoint: '/users' });
