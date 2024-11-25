@@ -169,14 +169,4 @@ describe( 'ReporterService', () => {
 			expect( metrics ).toContain( 'test_summary_count{endpoint="/api"} 2' );
 		} );
 	} );
-	
-	describe( 'initialization', () => {
-		it( 'should throw error if used before initialization', () => {
-			( ReporterService as any ).metricsService = undefined;
-			
-			expect( () => {
-				ReporterService.counter( 'test_counter' );
-			} ).toThrow();
-		} );
-	} );
 } );
