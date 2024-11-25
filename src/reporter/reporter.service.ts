@@ -13,8 +13,6 @@ export class ReporterService {
 		key: string,
 		labels?: Record<string, string | number>
 	): void {
-		this.validateMetricsService();
-		
 		try {
 			ReporterService.metricsService.incCounter( key, labels );
 		} catch ( error ) {
@@ -27,8 +25,6 @@ export class ReporterService {
 		value: number,
 		labels?: Record<string, string | number>
 	): void {
-		this.validateMetricsService();
-		
 		try {
 			ReporterService.metricsService.setGauge( key, value, labels );
 		} catch ( error ) {
@@ -42,8 +38,6 @@ export class ReporterService {
 		labels?: Record<string, string | number>,
 		buckets?: number[]
 	): void {
-		this.validateMetricsService();
-		
 		try {
 			ReporterService.metricsService.observeHistogram( key, value, labels, buckets );
 		} catch ( error ) {
@@ -57,18 +51,10 @@ export class ReporterService {
 		labels?: Record<string, string | number>,
 		percentiles?: number[]
 	): void {
-		this.validateMetricsService();
-		
 		try {
 			ReporterService.metricsService.observeSummary( key, value, labels, percentiles );
 		} catch ( error ) {
 			this.logger.error( `Error while observing summary - ${ key }, ${ value }`, error );
-		}
-	}
-	
-	private static validateMetricsService(): void {
-		if ( ! ReporterService.metricsService ) {
-			throw new Error( 'MetricsService is not initialized.' );
 		}
 	}
 }
