@@ -40,13 +40,13 @@ ReporterService.counter('api_requests_total', { endpoint: '/users' });
 ## Why Choose `nestjs-metrics-client`?
 
 🚀 **No Dependency Injection**  
-   Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the need for cumbersome dependency injection, making your code cleaner and more portable.
+Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the need for cumbersome dependency injection, making your code cleaner and more portable.
 
 🌟 **Effortless Integration**  
-   With minimal setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the global `ReporterService`.
+With minimal setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the global `ReporterService`.
 
 🎯 **Focus on Simplicity**  
-   Designed for developers who want powerful metrics without the complexity of managing dependencies or boilerplate code.
+Designed for developers who want powerful metrics without the complexity of managing dependencies or boilerplate code.
 
 ---
 
@@ -63,6 +63,7 @@ import { ReporterModule } from 'nestjs-metrics-client';
 @Module({
   imports: [
     ReporterModule.forRoot({
+      // Default metrics are disabled by default, set to true to enable.
       defaultMetricsEnabled: true,
       defaultLabels: {
         app: 'my-app',
@@ -86,7 +87,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Initialize the global reporter
-  ReporterService.init(app.get(MetricsService) );
+  ReporterService.init(app.get(MetricsService));
 
   await app.listen(3000);
 }
@@ -126,7 +127,7 @@ The global static service for reporting metrics:
 |--------------|-----------------------------|-------------------------------------------------------------|
 | `init()`     | Initialize the reporter     | `metricsService: MetricsService`                           |
 | `counter()`  | Increment a counter metric  | `key: string, labels?: Record<string, string | number>`     |
-| `gauge()`    | Set a gauge value           | `key: string, value: number, labels?: Record<string, string | number>` |
+| `gauge()`    | Set a gauge value          | `key: string, value: number, labels?: Record<string, string | number>` |
 | `histogram()`| Record a histogram value    | `key: string, value: number, labels?: Record<string, string | number>, buckets?: number[]` |
 | `summary()`  | Record a summary value      | `key: string, value: number, labels?: Record<string, string | number>, percentiles?: number[]` |
 
@@ -136,7 +137,7 @@ The global static service for reporting metrics:
 
 | Option                  | Type                       | Default    | Description                                   |
 |-------------------------|----------------------------|------------|-----------------------------------------------|
-| `defaultMetricsEnabled` | `boolean`                 | `true`     | Enable collection of default metrics          |
+| `defaultMetricsEnabled` | `boolean`                 | `false`    | Enable collection of default metrics          |
 | `defaultLabels`         | `Record<string, string>`  | `{}`       | Labels automatically added to all metrics     |
 
 #### `ReporterModule.forRootAsync(options)`
@@ -156,6 +157,40 @@ ReporterModule.forRootAsync({
 
 ---
 
+## Release
+
+This package uses semantic versioning via commit messages:
+
+### Version Bumping Commits
+```bash
+# Patch Release (1.0.X)
+fix: message      # Bug fixes
+perf: message     # Performance improvements
+
+# Minor Release (1.X.0)
+feat: message     # New features
+
+# Major Release (X.0.0)
+feat!: message            # Breaking change
+fix!: message             # Breaking change
+BREAKING CHANGE: message  # Breaking change anywhere in the commit body
+```
+
+### Non-Version Bumping Commits
+Only these specific types are allowed:
+```bash
+build: message    # Changes to build system or dependencies
+chore: message    # Maintenance tasks
+ci: message       # CI configuration files and scripts
+docs: message     # Documentation only
+refactor: message # Neither fixes a bug nor adds a feature
+style: message    # Code style (formatting, semicolons, etc)
+test: message     # Adding or correcting tests
+```
+
+Any other prefix will cause the commit to be ignored by semantic-release and won't appear anywhere in release notes.
+
+---
 ## Contributing
 
 Contributions are welcome! Please check out our [Contributing Guide](CONTRIBUTING.md) to get started.

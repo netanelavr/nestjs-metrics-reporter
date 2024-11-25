@@ -15,7 +15,7 @@ export class ReporterModule {
 			registry.setDefaultLabels( config.defaultLabels );
 		}
           
-		if ( config.defaultMetricsEnabled !== false ) {
+		if ( config.defaultMetricsEnabled === true ) {
 			collectDefaultMetrics( { register: registry } );
 		}
           
@@ -57,7 +57,7 @@ export class ReporterModule {
 							registry.setDefaultLabels( config.defaultLabels );
 						}
                               
-						if ( config.defaultMetricsEnabled !== false ) {
+						if ( config.defaultMetricsEnabled === true ) {
 							collectDefaultMetrics( { register: registry } );
 						}
                               
