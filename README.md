@@ -43,7 +43,7 @@ ReporterService.counter('api_requests_total', { endpoint: '/users' });
 Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the need for cumbersome dependency injection, making your code cleaner and more portable.
 
 🌟 **Effortless Integration**  
-With minimal setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the global `ReporterService`.
+With zero setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the global `ReporterService`.
 
 🎯 **Focus on Simplicity**  
 Designed for developers who want powerful metrics without the complexity of managing dependencies or boilerplate code.
@@ -75,25 +75,7 @@ import { ReporterModule } from 'nestjs-metrics-client';
 export class AppModule {}
 ```
 
-### 2. Initialize the Global Reporter
-
-Easily initialize the global `ReporterService` in your bootstrap function. No additional injections required.
-
-```typescript
-import { NestFactory } from '@nestjs/core';
-import { MetricsService, ReporterService } from 'nestjs-metrics-client';
-
-async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
-  // Initialize the global reporter
-  ReporterService.init(app.get(MetricsService));
-
-  await app.listen(3000);
-}
-```
-
-### 3. Report Metrics Anywhere
+### 2. Report Metrics Anywhere
 
 Once initialized, you can start reporting metrics instantly from anywhere in your application.
 
@@ -125,7 +107,6 @@ The global static service for reporting metrics:
 
 | Method       | Description                 | Parameters                                                  |
 |--------------|-----------------------------|-------------------------------------------------------------|
-| `init()`     | Initialize the reporter     | `metricsService: MetricsService`                           |
 | `counter()`  | Increment a counter metric  | `key: string, labels?: Record<string, string | number>`     |
 | `gauge()`    | Set a gauge value          | `key: string, value: number, labels?: Record<string, string | number>` |
 | `histogram()`| Record a histogram value    | `key: string, value: number, labels?: Record<string, string | number>, buckets?: number[]` |

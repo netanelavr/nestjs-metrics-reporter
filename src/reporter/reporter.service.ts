@@ -1,18 +1,17 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { MetricsService } from '../metrics/metrics.service';
 
-export class ReporterService {
+@Injectable()
+export class ReporterService implements OnApplicationBootstrap {
 	private static readonly logger = new Logger( ReporterService.name );
 	private static metricsService: MetricsService;
 	
-	static init( metricsService: MetricsService ): void {
-		ReporterService.metricsService = metricsService;
+	constructor( private readonly metrics: MetricsService ) {}
+	onApplicationBootstrap() {
+		ReporterService.metricsService = this.metrics;
 	}
 	
-	static counter(
-		key: string,
-		labels?: Record<string, string | number>
-	): void {
+	static counter(key: string, labels?: Record<string, string | number>): void {
 		try {
 			ReporterService.metricsService.incCounter( key, labels );
 		} catch ( error ) {
@@ -20,11 +19,7 @@ export class ReporterService {
 		}
 	}
 	
-	static gauge(
-		key: string,
-		value: number,
-		labels?: Record<string, string | number>
-	): void {
+	static gauge(key: string, value: number, labels?: Record<string, string | number>): void {
 		try {
 			ReporterService.metricsService.setGauge( key, value, labels );
 		} catch ( error ) {
@@ -32,12 +27,7 @@ export class ReporterService {
 		}
 	}
 	
-	static histogram(
-		key: string,
-		value: number,
-		labels?: Record<string, string | number>,
-		buckets?: number[]
-	): void {
+	static histogram(key: string, value: number, labels?: Record<string, string | number>, buckets?: number[]): void {
 		try {
 			ReporterService.metricsService.observeHistogram( key, value, labels, buckets );
 		} catch ( error ) {
@@ -45,12 +35,7 @@ export class ReporterService {
 		}
 	}
 	
-	static summary(
-		key: string,
-		value: number,
-		labels?: Record<string, string | number>,
-		percentiles?: number[]
-	): void {
+	static summary(key: string, value: number, labels?: Record<string, string | number>, percentiles?: number[]): void {
 		try {
 			ReporterService.metricsService.observeSummary( key, value, labels, percentiles );
 		} catch ( error ) {

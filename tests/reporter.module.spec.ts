@@ -9,6 +9,7 @@ describe('ReporterModule', () => {
 		if (module) {
 			await module.close();
 		}
+		(ReporterService as any).metricsService = undefined;
 	});
      
 	describe('forRoot', () => {
@@ -23,28 +24,29 @@ describe('ReporterModule', () => {
 					})
 				],
 			}).compile();
-               
-			const metricsService = module.get<MetricsService>(MetricsService);
-			ReporterService.init(metricsService);
+			
+			const reporterService = module.get<ReporterService>(ReporterService);
+			reporterService.onApplicationBootstrap();
+			
 			ReporterService.counter('test_counter');
                
 			const registry = module.get<Registry>(Registry);
 			const metrics = await registry.metrics();
-               
+			
 			expect(metrics).toContain('app="test-app"');
 			expect(metrics).toContain('environment="test"');
 		});
-          
+		
 		it('should work without configuration', async () => {
 			module = await Test.createTestingModule({
 				imports: [ReporterModule.forRoot()],
 			}).compile();
-               
+			
 			expect(module.get(Registry)).toBeDefined();
 			expect(module.get(MetricsService)).toBeDefined();
 		});
 	});
-     
+	
 	describe('forRootAsync', () => {
 		it('should support async configuration', async () => {
 			module = await Test.createTestingModule({
@@ -58,9 +60,10 @@ describe('ReporterModule', () => {
 					})
 				],
 			}).compile();
-               
-			const metricsService = module.get<MetricsService>(MetricsService);
-			ReporterService.init(metricsService);
+			
+			const reporterService = module.get<ReporterService>(ReporterService);
+			reporterService.onApplicationBootstrap();
+			
 			ReporterService.counter('test_counter');
                
 			const registry = module.get<Registry>(Registry);
