@@ -57,6 +57,7 @@ ReporterService.counter('api_requests_total', { endpoint: '/users' });
 Minimal setup required! Just import the `ReporterModule` in your `AppModule`.
 
 ```typescript
+import { Module } from "@nestjs/common";
 import { ReporterModule } from 'nestjs-metrics-client';
 
 @Module({
@@ -78,6 +79,7 @@ export class AppModule {}
 Easily initialize the global `ReporterService` in your bootstrap function. No additional injections required.
 
 ```typescript
+import { NestFactory } from '@nestjs/core';
 import { MetricsService, ReporterService } from 'nestjs-metrics-client';
 
 async function bootstrap() {
@@ -95,6 +97,7 @@ async function bootstrap() {
 Once initialized, you can start reporting metrics instantly from anywhere in your application.
 
 ```typescript
+import { Injectable } from '@nestjs/common';
 import { ReporterService } from 'nestjs-metrics-client';
 
 @Injectable()
@@ -116,8 +119,6 @@ export class UserService {
 ---
 
 ## API Reference
-
-### `ReporterService`
 
 The global static service for reporting metrics:
 
@@ -159,10 +160,10 @@ ReporterModule.forRootAsync({
 
 Contributions are welcome! Please check out our [Contributing Guide](CONTRIBUTING.md) to get started.
 
+---
+
 ## License
 
 This project is licensed under the Apache License, Version 2.0 - see the [LICENSE](LICENSE) file for details.
 
 ---
-
-`nestjs-metrics-client` provides a modern, **zero-dependency-injection** alternative to traditional NestJS metrics tools like `@willsoto/nestjs-prometheus`. Try it today for a simpler, more powerful metrics solution!
