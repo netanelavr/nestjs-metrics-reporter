@@ -27,7 +27,7 @@
    ```bash
    npm install
    npm run test
-   npm run lint
+   npm run lint: fix
    ```
 
 4. Commit your changes using semantic commits

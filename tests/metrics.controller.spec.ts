@@ -2,13 +2,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Registry, Counter } from 'prom-client';
 import { MetricsController } from '../src';
 
-describe('MetricsController', () => {
+describe( 'MetricsController', () => {
 	let controller: MetricsController;
 	let registry: Registry;
      
-	beforeEach(async () => {
+	beforeEach( async () => {
 		registry = new Registry();
-		const module: TestingModule = await Test.createTestingModule({
+		const module: TestingModule = await Test.createTestingModule( {
 			controllers: [MetricsController],
 			providers: [
 				{
@@ -16,42 +16,42 @@ describe('MetricsController', () => {
 					useValue: registry,
 				},
 			],
-		}).compile();
+		} ).compile();
           
-		controller = module.get<MetricsController>(MetricsController);
-	});
+		controller = module.get<MetricsController>( MetricsController );
+	} );
      
-	afterEach(() => {
+	afterEach( () => {
 		registry.clear();
-	});
+	} );
      
-	describe('getMetrics', () => {
-		it('should return prometheus metrics', async () => {
-			const counter = new Counter({
+	describe( 'getMetrics', () => {
+		it( 'should return prometheus metrics', async () => {
+			const counter = new Counter( {
 				name: 'test_counter',
 				help: 'test counter help',
 				registers: [registry]
-			});
+			} );
                
 			counter.inc();
                
 			const metrics = await controller.getMetrics();
-			expect(metrics).toBeDefined();
-			expect(typeof metrics).toBe('string');
-			expect(metrics).toContain('# HELP test_counter test counter help');
-			expect(metrics).toContain('test_counter 1');
-		});
+			expect( metrics ).toBeDefined();
+			expect( typeof metrics ).toBe( 'string' );
+			expect( metrics ).toContain( '# HELP test_counter test counter help' );
+			expect( metrics ).toContain( 'test_counter 1' );
+		} );
           
-		it('should handle empty metrics registry', async () => {
+		it( 'should handle empty metrics registry', async () => {
 			const metrics = await controller.getMetrics();
-			expect(metrics).toBeDefined();
-			expect(typeof metrics).toBe('string');
-			expect(metrics.trim()).toBe('');
-		});
+			expect( metrics ).toBeDefined();
+			expect( typeof metrics ).toBe( 'string' );
+			expect( metrics.trim() ).toBe( '' );
+		} );
           
-		it('should handle registry errors', async () => {
-			jest.spyOn(registry, 'metrics').mockRejectedValue(new Error('Registry error'));
-			await expect(controller.getMetrics()).rejects.toThrow('Registry error');
-		});
-	});
-});
+		it( 'should handle registry errors', async () => {
+			jest.spyOn( registry, 'metrics' ).mockRejectedValue( new Error( 'Registry error' ) );
+			await expect( controller.getMetrics() ).rejects.toThrow( 'Registry error' );
+		} );
+	} );
+} );

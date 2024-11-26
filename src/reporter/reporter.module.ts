@@ -1,7 +1,7 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { ReporterService } from './reporter.service';
 import { collectDefaultMetrics, Registry } from 'prom-client';
-import { MetricsConfig } from '../interfaces';
+import { MetricsConfig, ReporterAsyncOptions } from '../interfaces';
 import { MetricsService } from '../metrics/metrics.service';
 import { MetricsController } from '../metrics/metrics.controller';
 
@@ -9,15 +9,7 @@ import { MetricsController } from '../metrics/metrics.controller';
 @Module( {} )
 export class ReporterModule {
 	static forRoot( config: MetricsConfig = {} ): DynamicModule {
-		const registry = new Registry();
-          
-		if ( config.defaultLabels ) {
-			registry.setDefaultLabels( config.defaultLabels );
-		}
-          
-		if ( config.defaultMetricsEnabled === true ) {
-			collectDefaultMetrics( { register: registry } );
-		}
+		const registry = this.configureRegistry( config );
           
 		return {
 			module: ReporterModule,
@@ -34,11 +26,7 @@ export class ReporterModule {
 		};
 	}
      
-	static forRootAsync( options: {
-          imports?: any[];
-          useFactory: ( ...args: any[] ) => Promise<MetricsConfig> | MetricsConfig;
-          inject?: any[];
-     } ): DynamicModule {
+	static forRootAsync( options: ReporterAsyncOptions ): DynamicModule {
 		return {
 			module: ReporterModule,
 			imports: options.imports,
@@ -51,17 +39,7 @@ export class ReporterModule {
 				{
 					provide: Registry,
 					useFactory: async ( config: MetricsConfig ) => {
-						const registry = new Registry();
-                              
-						if ( config.defaultLabels ) {
-							registry.setDefaultLabels( config.defaultLabels );
-						}
-                              
-						if ( config.defaultMetricsEnabled === true ) {
-							collectDefaultMetrics( { register: registry } );
-						}
-                              
-						return registry;
+						return ReporterModule.configureRegistry( config );
 					},
 					inject: [ 'CONFIG_OPTIONS' ],
 				},
@@ -71,5 +49,19 @@ export class ReporterModule {
 			controllers: [ MetricsController ],
 			exports: [ ReporterService ]
 		};
+	}
+     
+	private static configureRegistry( config: MetricsConfig = {} ): Registry {
+		const registry = new Registry();
+          
+		if ( config.defaultLabels ) {
+			registry.setDefaultLabels( config.defaultLabels );
+		}
+          
+		if ( config.defaultMetricsEnabled ) {
+			collectDefaultMetrics( { register: registry } );
+		}
+          
+		return registry;
 	}
 }

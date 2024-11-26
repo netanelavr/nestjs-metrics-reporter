@@ -21,7 +21,36 @@
     "semi": ["error", "always"],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "object-curly-spacing": ["error", "always"],
+    "@typescript-eslint/brace-style": ["error", "1tbs"],
+    "@typescript-eslint/type-annotation-spacing": [
+      "error",
+      {
+        "before": false,
+        "after": true,
+        "overrides": {
+          "parameter": { "before": false, "after": true },
+          "property": { "before": false, "after": true }
+        }
+      }
+    ],
+    "space-before-function-paren": [
+      "error",
+      {
+        "anonymous": "always",
+        "named": "never",
+        "asyncArrow": "always"
+      }
+    ],
+    "space-in-parens": ["error", "always"], // Enforce spaces inside parentheses
+    "keyword-spacing": [
+      "error",
+      {
+        "before": true,
+        "after": true
+      }
+    ]
   },
   "ignorePatterns": ["dist/", "dist/*"]
 }
