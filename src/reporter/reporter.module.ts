@@ -4,6 +4,7 @@ import { collectDefaultMetrics, Registry } from 'prom-client';
 import { MetricsConfig, ReporterAsyncOptions } from '../interfaces';
 import { MetricsService } from '../metrics/metrics.service';
 import { MetricsController } from '../metrics/metrics.controller';
+import { CONFIG_OPTIONS } from '../constants';
 
 @Global()
 @Module( {} )
@@ -32,7 +33,7 @@ export class ReporterModule {
 			imports: options.imports,
 			providers: [
 				{
-					provide: 'CONFIG_OPTIONS',
+					provide: CONFIG_OPTIONS,
 					useFactory: options.useFactory,
 					inject: options.inject,
 				},
@@ -41,7 +42,7 @@ export class ReporterModule {
 					useFactory: async ( config: MetricsConfig ) => {
 						return ReporterModule.configureRegistry( config );
 					},
-					inject: [ 'CONFIG_OPTIONS' ],
+					inject: [ CONFIG_OPTIONS ],
 				},
 				MetricsService,
 				ReporterService
