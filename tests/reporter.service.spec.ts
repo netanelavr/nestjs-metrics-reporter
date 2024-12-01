@@ -3,11 +3,14 @@ import { ReporterService } from '../src';
 import { MetricsService } from '../src';
 import { Registry } from 'prom-client';
 import { Logger } from '@nestjs/common';
+import { CONFIG_OPTIONS } from '../src/constants';
 
 describe( 'ReporterService', () => {
 	let registry: Registry;
 	let loggerSpy: jest.SpyInstance;
 	let reporterService: ReporterService;
+	let metricsService: MetricsService;
+	let pushMetricsSpy: jest.SpyInstance;
 	
 	beforeEach( async () => {
 		registry = new Registry();
@@ -19,19 +22,28 @@ describe( 'ReporterService', () => {
 					provide: Registry,
 					useValue: registry,
 				},
+				{
+					provide: CONFIG_OPTIONS,
+					useValue: {
+						pushgatewayUrl: 'http://localhost:9091',
+						pushgatewayOptions: {}
+					}
+				}
 			],
 		} ).compile();
 		
 		reporterService = module.get<ReporterService>( ReporterService );
-		// Initialize through lifecycle hook
+		metricsService = module.get<MetricsService>( MetricsService );
+		
 		reporterService.onApplicationBootstrap();
+		
 		loggerSpy = jest.spyOn( Logger.prototype, 'error' );
+		pushMetricsSpy = jest.spyOn( metricsService, 'pushMetrics' );
 	} );
 	
 	afterEach( () => {
 		registry.clear();
 		jest.clearAllMocks();
-		// Reset static instance between tests
 		( ReporterService as any ).metricsService = undefined;
 	} );
 	
@@ -180,6 +192,72 @@ describe( 'ReporterService', () => {
 			const metrics = await registry.metrics();
 			expect( metrics ).toContain( 'test_summary_sum{endpoint="/api"} 300' );
 			expect( metrics ).toContain( 'test_summary_count{endpoint="/api"} 2' );
+		} );
+	} );
+	
+	describe( 'pushMetrics', () => {
+		it( 'should successfully push metrics', async () => {
+			pushMetricsSpy.mockResolvedValue( { status: 200, success: true } );
+			
+			await ReporterService.pushMetrics( 'test-job' );
+			
+			expect( pushMetricsSpy ).toHaveBeenCalledWith( 'test-job' );
+			expect( loggerSpy ).not.toHaveBeenCalled();
+		} );
+		
+		it( 'should handle pushMetrics failure', async () => {
+			const error = new Error( 'Push failed' );
+			pushMetricsSpy.mockRejectedValue( error );
+			
+			await ReporterService.pushMetrics( 'test-job' );
+			
+			expect( pushMetricsSpy ).toHaveBeenCalledWith( 'test-job' );
+			expect( loggerSpy ).toHaveBeenCalledWith( 'Error pushing metrics: Error: Push failed' );
+		} );
+		
+		it( 'should handle pushgateway not configured', async () => {
+			const moduleWithoutPushgateway: TestingModule = await Test.createTestingModule( {
+				providers: [
+					MetricsService,
+					ReporterService,
+					{
+						provide: Registry,
+						useValue: registry,
+					},
+					{
+						provide: CONFIG_OPTIONS,
+						useValue: {}
+					}
+				],
+			} ).compile();
+			
+			const newReporterService = moduleWithoutPushgateway.get<ReporterService>( ReporterService );
+			const newMetricsService = moduleWithoutPushgateway.get<MetricsService>( MetricsService );
+			newReporterService.onApplicationBootstrap();
+			
+			const newPushMetricsSpy = jest.spyOn( newMetricsService, 'pushMetrics' );
+			newPushMetricsSpy.mockResolvedValue( {
+				status: 400,
+				success: false,
+				message: 'Pushgateway is not configured'
+			} );
+			
+			( ReporterService as any ).metricsService = newMetricsService;
+			
+			await ReporterService.pushMetrics( 'test-job' );
+			
+			expect( newPushMetricsSpy ).toHaveBeenCalledWith( 'test-job' );
+			expect( loggerSpy ).not.toHaveBeenCalled();
+		} );
+		
+		it( 'should handle non-Error objects in error message', async () => {
+			const nonErrorObject = 'String error message';
+			pushMetricsSpy.mockRejectedValue( nonErrorObject );
+			
+			await ReporterService.pushMetrics( 'test-job' );
+			
+			expect( pushMetricsSpy ).toHaveBeenCalledWith( 'test-job' );
+			expect( loggerSpy ).toHaveBeenCalledWith( 'Error pushing metrics: String error message' );
 		} );
 	} );
 } );

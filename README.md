@@ -17,33 +17,38 @@ Effortlessly report metrics from anywhere in your codebase without complex setup
 
 </div>
 
-
 ## Installation
 
 ```bash
 npm install nestjs-metrics-client
 ```
+
 ---
 
 ## Overview
 
-`nestjs-metrics-client` is a lightweight, **zero-setup** alternative to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), eliminating the need for dependency injection or extensive configuration.
+`nestjs-metrics-client` is a lightweight, **zero-setup** alternative
+to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), eliminating the need for dependency
+injection or extensive configuration.
 Instantly report metrics from anywhere in your application using a global static reporter.
 
 ```typescript
 import { ReporterService } from 'nestjs-metrics-client';
 
-ReporterService.counter('api_requests_total', { endpoint: '/users' });
+ReporterService.counter( 'api_requests_total', { endpoint: '/users' } );
 ```
+
 ---
 
 ## Why Choose `nestjs-metrics-client`?
 
 🚀 **No Dependency Injection**  
-Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the need for cumbersome dependency injection, making your code cleaner and more portable.
+Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the
+need for cumbersome dependency injection, making your code cleaner and more portable.
 
 🌟 **Effortless Integration**  
-With zero setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the global `ReporterService`.
+With zero setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the
+global `ReporterService`.
 
 🎯 **Focus on Simplicity**  
 Designed for developers who want powerful metrics without the complexity of managing dependencies or boilerplate code.
@@ -60,19 +65,32 @@ Minimal setup required! Just import the `ReporterModule` in your `AppModule`.
 import { Module } from "@nestjs/common";
 import { ReporterModule } from 'nestjs-metrics-client';
 
-@Module({
-  imports: [
-    ReporterModule.forRoot({
-      // Default metrics are disabled by default, set to true to enable.
-      defaultMetricsEnabled: true,
-      defaultLabels: {
-        app: 'my-app',
-        environment: 'production',
-      }
-    }),
-  ],
-})
-export class AppModule {}
+@Module( {
+     imports: [
+          ReporterModule.forRoot( {
+               // Default metrics are disabled by default, set to true to enable.
+               defaultMetricsEnabled: true,
+               defaultLabels: {
+                    app: 'my-app',
+                    environment: 'production',
+               },
+               // Optional: Configure Pushgateway for batch job metrics
+               pushgatewayUrl: 'http://pushgateway:9091',
+               pushgatewayOptions: {
+                    timeout: 5000,
+                    headers: {
+                         'Custom-Header': 'value'
+                    },
+                    auth: {
+                         username: 'user',
+                         password: 'pass'
+                    }
+               }
+          } ),
+     ],
+} )
+export class AppModule {
+}
 ```
 
 ### 2. Report Metrics Anywhere
@@ -85,55 +103,66 @@ import { ReporterService } from 'nestjs-metrics-client';
 
 @Injectable()
 export class UserService {
-  async createUser() {
-    // Increment user creation counter
-    ReporterService.counter('users_created_total', {
-      source: 'api',
-      user_type: 'standard'
-    });
-
-    // Update active user gauge
-    ReporterService.gauge('active_users', 42, {
-      region: 'us-east-1'
-    });
-  }
+     async createUser() {
+          // Increment user creation counter
+          ReporterService.counter( 'users_created_total', {
+               source: 'api',
+               user_type: 'standard'
+          } );
+          
+          // Update active user gauge
+          ReporterService.gauge( 'active_users', 42, {
+               region: 'us-east-1'
+          } );
+          
+          // Push metrics to Pushgateway
+          await ReporterService.pushMetrics( 'user_service_job' );
+     }
 }
 ```
+
 ---
 
 ## API Reference
 
 The global static service for reporting metrics:
 
-| Method       | Description                 | Parameters                                                  |
-|--------------|-----------------------------|-------------------------------------------------------------|
-| `counter()`  | Increment a counter metric  | `key: string, labels?: Record<string, string | number>`     |
-| `gauge()`    | Set a gauge value          | `key: string, value: number, labels?: Record<string, string | number>` |
-| `histogram()`| Record a histogram value    | `key: string, value: number, labels?: Record<string, string | number>, buckets?: number[]` |
-| `summary()`  | Record a summary value      | `key: string, value: number, labels?: Record<string, string | number>, percentiles?: number[]` |
+| Method          | Description                 | Parameters                                                  |
+|-----------------|-----------------------------|-------------------------------------------------------------|
+| `counter()`     | Increment a counter metric  | `key: string, labels?: Record<string, string \| number>`                          
+| `gauge()`       | Set a gauge value           | `key: string, value: number, labels?: Record<string, string \| number>`           
+| `histogram()`   | Record a histogram value    | `key: string, value: number, labels?: Record<string, string \| number>, buckets?: number[]` 
+| `summary()`     | Record a summary value      | `key: string, value: number, labels?: Record<string, string \| number>, percentiles?: number[]`
+| `pushMetrics()` | Push metrics to Pushgateway | `jobName: string`                                           |
 
 ### Module Configuration
 
 #### `ReporterModule.forRoot(options)`
 
-| Option                  | Type                       | Default    | Description                                   |
-|-------------------------|----------------------------|------------|-----------------------------------------------|
-| `defaultMetricsEnabled` | `boolean`                 | `false`    | Enable collection of default metrics          |
-| `defaultLabels`         | `Record<string, string>`  | `{}`       | Labels automatically added to all metrics     |
+| Option                  | Type                     | Default     | Description                                 |
+|-------------------------|--------------------------|-------------|---------------------------------------------|
+| `defaultMetricsEnabled` | `boolean`                | `false`     | Enable collection of default metrics        |
+| `defaultLabels`         | `Record<string, string>` | `{}`        | Labels automatically added to all metrics   |
+| `pushgatewayUrl`        | `string`                 | `undefined` | URL of the Pushgateway server               |
+| `pushgatewayOptions`    | `PushgatewayOptions`     | `{}`        | Additional options for Pushgateway requests |
 
 #### `ReporterModule.forRootAsync(options)`
 
 Supports dynamic configuration with factory providers:
 
 ```typescript
-ReporterModule.forRootAsync({
-  useFactory: () => ({
-    defaultLabels: {
-      app: process.env.APP_NAME || 'default-app',
-      environment: process.env.NODE_ENV || 'development',
-    },
-  }),
-});
+ReporterModule.forRootAsync( {
+     useFactory: () => ( {
+          defaultLabels: {
+               app: process.env.APP_NAME || 'default-app',
+               environment: process.env.NODE_ENV || 'development',
+          },
+          pushgatewayUrl: process.env.PUSHGATEWAY_URL,
+          pushgatewayOptions: {
+               timeout: parseInt( process.env.PUSHGATEWAY_TIMEOUT ) || 5000
+          }
+     } ),
+} );
 ```
 
 ---
@@ -143,6 +172,7 @@ ReporterModule.forRootAsync({
 This package uses semantic versioning via commit messages:
 
 ### Version Bumping Commits
+
 ```bash
 # Patch Release (1.0.X)
 fix: message      # Bug fixes
@@ -158,7 +188,9 @@ BREAKING CHANGE: message  # Breaking change anywhere in the commit body
 ```
 
 ### Non-Version Bumping Commits
+
 Only these specific types are allowed:
+
 ```bash
 build: message    # Changes to build system or dependencies
 chore: message    # Maintenance tasks
@@ -172,6 +204,7 @@ test: message     # Adding or correcting tests
 Any other prefix will cause the commit to be ignored by semantic-release and won't appear anywhere in release notes.
 
 ---
+
 ## Contributing
 
 Contributions are welcome! Please check out our [Contributing Guide](CONTRIBUTING.md) to get started.

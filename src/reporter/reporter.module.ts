@@ -10,7 +10,7 @@ import { CONFIG_OPTIONS } from '../constants';
 @Module( {} )
 export class ReporterModule {
 	static forRoot( config: MetricsConfig = {} ): DynamicModule {
-		const registry = this.configureRegistry( config );
+		const registry: Registry = this.configureRegistry( config );
           
 		return {
 			module: ReporterModule,
@@ -19,6 +19,10 @@ export class ReporterModule {
 					provide: Registry,
 					useValue: registry
 				},
+				{
+					provide: CONFIG_OPTIONS,
+					useValue: config
+				},
 				MetricsService,
 				ReporterService
 			],
@@ -26,7 +30,7 @@ export class ReporterModule {
 			exports: [ ReporterService ]
 		};
 	}
-     
+ 
 	static forRootAsync( options: ReporterAsyncOptions ): DynamicModule {
 		return {
 			module: ReporterModule,
@@ -53,7 +57,7 @@ export class ReporterModule {
 	}
      
 	private static configureRegistry( config: MetricsConfig = {} ): Registry {
-		const registry = new Registry();
+		const registry: Registry = new Registry();
           
 		if ( config.defaultLabels ) {
 			registry.setDefaultLabels( config.defaultLabels );

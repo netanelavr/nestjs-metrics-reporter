@@ -44,7 +44,20 @@ export class ReporterService implements OnApplicationBootstrap {
 		}
 	}
 	
-	private static logError( action: string, key: string, labels: Record<string, string | number> | undefined, error: unknown ): void {
+	static async pushMetrics( jobName: string ): Promise<void> {
+		try {
+			await ReporterService.metricsService.pushMetrics( jobName );
+		} catch ( e ) {
+			this.logger.error( `Error pushing metrics: ${ e }` );
+		}
+	}
+	
+	private static logError(
+		action: string,
+		key: string,
+		labels: Record<string, string | number> | undefined,
+		error: unknown
+	): void {
 		this.logger.error( {
 			message: `Failed to ${action}`,
 			metric: key,

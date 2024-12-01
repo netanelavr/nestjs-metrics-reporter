@@ -1,15 +1,30 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Counter, Gauge, Histogram, Registry, Summary } from 'prom-client';
+import { Counter, Gauge, Histogram, Pushgateway, Registry, Summary } from 'prom-client';
+import { MetricsConfig, PushgatewayResponse } from '../interfaces';
+import { CONFIG_OPTIONS } from '../constants';
 
 @Injectable()
 export class MetricsService {
-	private readonly counter: { [ key: string ]: Counter<string> } = {};
-	private readonly gauge: { [ key: string ]: Gauge<string> } = {};
-	private readonly histogram: { [ key: string ]: Histogram<string> } = {};
-	private readonly summary: { [ key: string ]: Summary<string> } = {};
+	private readonly counter: Record<string, Counter<string>> = {};
+	private readonly gauge: Record<string, Gauge<string>> = {};
+	private readonly histogram: Record<string, Histogram<string>> = {};
+	private readonly summary: Record<string, Summary<string>> = {};
+	private readonly pushgateway: Pushgateway;
 	
-	constructor( @Inject( Registry ) private readonly registry: Registry ) {}
 	
+	constructor(
+          @Inject( Registry ) private readonly registry: Registry,
+          @Inject( CONFIG_OPTIONS ) private readonly config: MetricsConfig
+	) {
+		if ( this.config.pushgatewayUrl ) {
+			this.pushgateway = new Pushgateway(
+				this.config.pushgatewayUrl,
+				this.config.pushgatewayOptions || [],
+				this.registry,
+			);
+		}
+	}
+     
 	public incCounter( key: string, labels?: Record<string, string | number> ): void {
 		if ( ! this.counter[ key ] ) {
 			this.counter[ key ] = new Counter( {
@@ -21,7 +36,7 @@ export class MetricsService {
 		}
 		this.counter[ key ].inc( labels || {} );
 	}
-	
+     
 	public setGauge( key: string, value: number, labels?: Record<string, string | number> ): void {
 		if ( ! this.gauge[ key ] ) {
 			this.gauge[ key ] = new Gauge( {
@@ -33,7 +48,7 @@ export class MetricsService {
 		}
 		this.gauge[ key ].set( labels || {}, value );
 	}
-	
+     
 	public observeHistogram(
 		key: string,
 		value: number,
@@ -51,7 +66,7 @@ export class MetricsService {
 		}
 		this.histogram[ key ].observe( labels || {}, value );
 	}
-	
+     
 	public observeSummary(
 		key: string,
 		value: number,
@@ -68,5 +83,26 @@ export class MetricsService {
 			} );
 		}
 		this.summary[ key ].observe( labels || {}, value );
+	}
+     
+	public async pushMetrics( jobName: string ): Promise<PushgatewayResponse> {
+		if ( !this.pushgateway ) {
+			return {
+				status: 400,
+				success: false,
+				message: 'Pushgateway is not configured'
+			};
+		}
+
+		try {
+			await this.pushgateway.pushAdd( { jobName } );
+			return { status: 200, success: true };
+		} catch ( error ) {
+			return {
+				status: 500,
+				success: false,
+				message: error instanceof Error ? error.message : String( error )
+			};
+		}
 	}
 }
