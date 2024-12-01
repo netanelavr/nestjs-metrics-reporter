@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Registry, Counter } from 'prom-client';
-import { MetricsController } from '../src';
+import { MetricsController } from '../index';
 
 describe( 'MetricsController', () => {
 	let controller: MetricsController;
