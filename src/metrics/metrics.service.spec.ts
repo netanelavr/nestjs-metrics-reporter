@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { MetricsService } from '../index';
 import { Registry, Pushgateway } from 'prom-client';
 import { CONFIG_OPTIONS } from '../constants';
+import { MetricsService } from './metrics.service';
 
 const mockPushAdd = jest.fn().mockResolvedValue( undefined );
 

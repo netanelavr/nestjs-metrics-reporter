@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Registry } from 'prom-client';
-import { MetricsService, ReporterModule, ReporterService } from '../index';
+import { ReporterService } from './reporter.service';
+import { ReporterModule } from './reporter.module';
+import { MetricsService } from '../metrics/metrics.service';
 
 describe( 'ReporterModule', () => {
 	let module: TestingModule;
