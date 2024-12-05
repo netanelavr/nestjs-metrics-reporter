@@ -1,9 +1,8 @@
 <p align="center">
   <a href="https://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
-
-<h1 style="text-align: center;">NestJS Metrics Reporter</h1>
 <div align="center">
+<h1 style="font-size: 2em;">NestJS Metrics Reporter</h1>
 
 [![npm version](https://badge.fury.io/js/nestjs-metrics-client.svg)](https://badge.fury.io/js/nestjs-metrics-client)
 <a href="https://www.npmjs.com/package/nestjs-metrics-client" target="_blank"><img src="https://img.shields.io/npm/dm/nestjs-metrics-client" alt="NPM Downloads" /></a>
