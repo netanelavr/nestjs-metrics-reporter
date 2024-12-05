@@ -24,7 +24,6 @@ describe( 'MetricsService', () => {
 	};
      
 	beforeEach( async () => {
-		// Clear mock data before each test
 		mockPushAdd.mockClear();
           
 		registry = new Registry();

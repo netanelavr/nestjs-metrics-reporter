@@ -43,7 +43,7 @@
         "asyncArrow": "always"
       }
     ],
-    "space-in-parens": ["error", "always"], // Enforce spaces inside parentheses
+    "space-in-parens": ["error", "always"],
     "keyword-spacing": [
       "error",
       {

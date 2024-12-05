@@ -1,10 +1,14 @@
-# nestjs-metrics-client
+<p align="center">
+  <a href="https://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+</p>
 
+<h1 style="text-align: center;">NestJS Metrics Reporter</h1>
 <div align="center">
 
 [![npm version](https://badge.fury.io/js/nestjs-metrics-client.svg)](https://badge.fury.io/js/nestjs-metrics-client)
+<a href="https://www.npmjs.com/package/nestjs-metrics-client" target="_blank"><img src="https://img.shields.io/npm/dm/nestjs-metrics-client" alt="NPM Downloads" /></a>
+<a href="https://medium.com/elementor-engineers/avoid-prometheus-mess-in-nestjs-1ea368e3e21e" target="_blank"><img src="https://img.shields.io/badge/Medium-Read%20Article-black?logo=medium" alt="Medium Article" /></a>
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org)
 
 📊 A **zero-dependency-injection** alternative to Prometheus metrics solutions for NestJS.  
 Effortlessly report metrics from anywhere in your codebase without complex setup or dependency injection.
@@ -152,14 +156,16 @@ Supports dynamic configuration with factory providers:
 
 ```typescript
 ReporterModule.forRootAsync( {
+     imports: [ ConfigModule ],
+     inject: [ ConfigService ],
      useFactory: () => ( {
           defaultLabels: {
-               app: process.env.APP_NAME || 'default-app',
-               environment: process.env.NODE_ENV || 'development',
+               app: configService.get( 'APP_NAME' ) || 'default-app',
+               environment: configService.get( 'NODE_ENV' ) || 'development',
           },
-          pushgatewayUrl: process.env.PUSHGATEWAY_URL,
+          pushgatewayUrl: configService.get( 'PUSHGATEWAY_URL' ),
           pushgatewayOptions: {
-               timeout: parseInt( process.env.PUSHGATEWAY_TIMEOUT ) || 5000
+               timeout: +configService.get( 'PUSHGATEWAY_TIMEOUT' ) || 5000
           }
      } ),
 } );
