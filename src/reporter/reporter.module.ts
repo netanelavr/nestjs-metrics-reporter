@@ -27,7 +27,7 @@ export class ReporterModule {
 				ReporterService
 			],
 			controllers: [ MetricsController ],
-			exports: [ ReporterService, MetricsService ]
+			exports: [ ReporterService ]
 		};
 	}
  
@@ -52,7 +52,7 @@ export class ReporterModule {
 				ReporterService
 			],
 			controllers: [ MetricsController ],
-			exports: [ ReporterService, MetricsService ]
+			exports: [ ReporterService ]
 		};
 	}
      
