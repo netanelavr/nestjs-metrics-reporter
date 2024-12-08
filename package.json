@@ -1,6 +1,6 @@
 {
   "name": "nestjs-metrics-client",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "A global static Prometheus metrics reporter for NestJS applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { Registry } from 'prom-client';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags( 'Metrics' )
 @Controller( 'metrics' )
@@ -9,6 +9,7 @@ export class MetricsController {
 	
 	@Get()
 	@ApiOperation( { summary: 'Get Prometheus metrics' } )
+	@ApiOkResponse( { type: Object } )
 	async getMetrics(): Promise<string> {
 		return await this.registry.metrics();
 	}
