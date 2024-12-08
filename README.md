@@ -41,6 +41,22 @@ import { ReporterService } from 'nestjs-metrics-client';
 ReporterService.counter( 'api_requests_total', { endpoint: '/users' } );
 ```
 
+```mermaid
+graph TD
+    subgraph Application["Application"]
+        UserModule[User Module]
+        ProductModule[Product Module]
+        UserModule --> ReporterService
+        ProductModule --> ReporterService
+        ReporterService --> MetricsService
+        MetricsService --> Registry["Prometheus Registry (Singleton)"]
+        MetricsController[/metrics endpoint/] --> Registry
+    end
+    Prometheus[Prometheus Scraper] --> MetricsController
+
+    MetricsService["Metrics Service (Counters, Gauges, etc.)"]
+    ReporterService["Reporter Service (Global Wrapper)"]
+```
 ---
 
 ## Why Choose `nestjs-metrics-client`?
