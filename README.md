@@ -93,6 +93,10 @@ import { ReporterModule } from 'nestjs-metrics-client';
                     app: 'my-app',
                     environment: 'production',
                },
+               
+               // Optional: Configure interceptors for custom metrics
+               interceptors: [ SomeInterceptor ],
+               
                // Optional: Configure Pushgateway for batch job metrics
                pushgatewayUrl: 'http://pushgateway:9091',
                pushgatewayOptions: {
@@ -164,6 +168,7 @@ The global static service for reporting metrics:
 | `defaultLabels`         | `Record<string, string>` | `{}`        | Labels automatically added to all metrics   |
 | `pushgatewayUrl`        | `string`                 | `undefined` | URL of the Pushgateway server               |
 | `pushgatewayOptions`    | `PushgatewayOptions`     | `{}`        | Additional options for Pushgateway requests |
+| `interceptors`          | `Type<any>[]`            | `[]`        | Interceptors for custom metrics reporting   |
 
 #### `ReporterModule.forRootAsync(options)`
 

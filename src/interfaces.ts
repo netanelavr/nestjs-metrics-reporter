@@ -1,6 +1,9 @@
+import { Type } from '@nestjs/common';
+
 export interface MetricsConfig {
 	defaultLabels?: Record<string, string>;
 	defaultMetricsEnabled?: boolean;
+	interceptors?: Type<any>[]
 	pushgatewayUrl?: string;
 	pushgatewayOptions?: {
 		timeout?: number;
