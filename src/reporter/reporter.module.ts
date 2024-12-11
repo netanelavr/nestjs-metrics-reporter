@@ -39,38 +39,28 @@ export class ReporterModule {
 		};
 	}
  
-	static async forRootAsync( options: ReporterAsyncOptions ): Promise<DynamicModule> {
-		const providers: Provider[] = [
-			{
-				provide: CONFIG_OPTIONS,
-				useFactory: options.useFactory,
-				inject: options.inject,
-			},
-			{
-				provide: Registry,
-				useFactory: async ( config: MetricsConfig ) => {
-					return ReporterModule.configureRegistry( config );
-				},
-				inject: [CONFIG_OPTIONS],
-			},
-			MetricsService,
-			ReporterService
-		];
-		
-		const asyncConfig = await options.useFactory( ...( options.inject || [] ) );
-		if ( asyncConfig.interceptors ) {
-			providers.push( ...asyncConfig.interceptors.map( interceptor => ( {
-				provide: APP_INTERCEPTOR,
-				useClass: interceptor as Type<any>,
-			} ) ) );
-		}
-		
+	static forRootAsync( options: ReporterAsyncOptions ): DynamicModule {
 		return {
 			module: ReporterModule,
 			imports: options.imports,
-			providers,
-			controllers: [MetricsController],
-			exports: [ReporterService]
+			providers: [
+				{
+					provide: CONFIG_OPTIONS,
+					useFactory: options.useFactory,
+					inject: options.inject,
+				},
+				{
+					provide: Registry,
+					useFactory: async ( config: MetricsConfig ) => {
+						return ReporterModule.configureRegistry( config );
+					},
+					inject: [ CONFIG_OPTIONS ],
+				},
+				MetricsService,
+				ReporterService
+			],
+			controllers: [ MetricsController ],
+			exports: [ ReporterService ]
 		};
 	}
      
