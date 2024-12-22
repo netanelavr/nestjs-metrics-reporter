@@ -30,10 +30,9 @@ npm install nestjs-metrics-reporter
 
 ## Overview
 
-`nestjs-metrics-reporter` is a lightweight, **zero-setup** alternative
-to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), eliminating the need for dependency
-injection or extensive configuration.
-Instantly report metrics from anywhere in your application using a global static reporter.
+`nestjs-metrics-reporter` is a lightweight, **zero-setup** solution for reporting metrics in your NestJS application.
+It eliminates the need for dependency injection or extensive configuration. Instantly report metrics from anywhere in 
+your application using a global static reporter.
 
 ```typescript
 import { ReporterService } from 'nestjs-metrics-reporter';
@@ -62,8 +61,7 @@ graph TD
 ## Why Choose `nestjs-metrics-reporter`?
 
 🚀 **No Dependency Injection**  
-Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-reporter` removes the
-need for cumbersome dependency injection, making your code cleaner and more portable.
+Eliminates the need for cumbersome dependency injection, making your code cleaner and more portable.
 
 🌟 **Effortless Integration**  
 With zero setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the
