@@ -1,6 +1,6 @@
-# Contributing to nestjs-metrics-client
+# Contributing to nestjs-metrics-reporter
 
-🎉 Thank you for considering contributing to nestjs-metrics-client! This document outlines the basics you need to know.
+🎉 Thank you for considering contributing to nestjs-metrics-reporter! This document outlines the basics you need to know.
 
 ## Ways to Contribute
 
@@ -13,7 +13,7 @@
 
 1. Fork and clone the repository
    ```bash
-   git clone https://github.com/your-username/nestjs-metrics-client.git
+   git clone https://github.com/your-username/nestjs-metrics-reporter.git
    ```
 
 2. Create a feature branch

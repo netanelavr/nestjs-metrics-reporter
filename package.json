@@ -1,5 +1,5 @@
 {
-  "name": "nestjs-metrics-client",
+  "name": "nestjs-metrics-reporter",
   "version": "1.0.0",
   "description": "A global static Prometheus metrics reporter for NestJS applications",
   "main": "dist/index.js",
@@ -40,12 +40,12 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/netanelavr/nestjs-metrics-client.git"
+    "url": "git+https://github.com/netanelavr/nestjs-metrics-reporter.git"
   },
   "bugs": {
-    "url": "https://github.com/netanelavr/nestjs-metrics-client/issues"
+    "url": "https://github.com/netanelavr/nestjs-metrics-reporter/issues"
   },
-  "homepage": "https://github.com/netanelavr/nestjs-metrics-client#readme",
+  "homepage": "https://github.com/netanelavr/nestjs-metrics-reporter#readme",
   "dependencies": {
     "prom-client": "^14.0.0"
   },

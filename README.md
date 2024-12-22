@@ -4,8 +4,8 @@
 <div align="center">
 <h1 style="font-size: 2em;">NestJS Metrics Reporter</h1>
 
-[![npm version](https://badge.fury.io/js/nestjs-metrics-client.svg)](https://badge.fury.io/js/nestjs-metrics-client)
-<a href="https://www.npmjs.com/package/nestjs-metrics-client" target="_blank"><img src="https://img.shields.io/npm/dm/nestjs-metrics-client" alt="NPM Downloads" /></a>
+[![npm version](https://badge.fury.io/js/nestjs-metrics-reporter.svg)](https://badge.fury.io/js/nestjs-metrics-reporter)
+<a href="https://www.npmjs.com/package/nestjs-metrics-reporter" target="_blank"><img src="https://img.shields.io/npm/dm/nestjs-metrics-reporter" alt="NPM Downloads" /></a>
 <a href="https://medium.com/elementor-engineers/avoid-prometheus-mess-in-nestjs-1ea368e3e21e" target="_blank"><img src="https://img.shields.io/badge/Medium-Read%20Article-black?logo=medium" alt="Medium Article" /></a>
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -23,20 +23,20 @@ Effortlessly report metrics from anywhere in your codebase without complex setup
 ## Installation
 
 ```bash
-npm install nestjs-metrics-client
+npm install nestjs-metrics-reporter
 ```
 
 ---
 
 ## Overview
 
-`nestjs-metrics-client` is a lightweight, **zero-setup** alternative
+`nestjs-metrics-reporter` is a lightweight, **zero-setup** alternative
 to [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), eliminating the need for dependency
 injection or extensive configuration.
 Instantly report metrics from anywhere in your application using a global static reporter.
 
 ```typescript
-import { ReporterService } from 'nestjs-metrics-client';
+import { ReporterService } from 'nestjs-metrics-reporter';
 
 ReporterService.counter( 'api_requests_total', { endpoint: '/users' } );
 ```
@@ -59,10 +59,10 @@ graph TD
 ```
 ---
 
-## Why Choose `nestjs-metrics-client`?
+## Why Choose `nestjs-metrics-reporter`?
 
 🚀 **No Dependency Injection**  
-Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-client` removes the
+Unlike [@willsoto/nestjs-prometheus](https://github.com/willsoto/nestjs-prometheus), `nestjs-metrics-reporter` removes the
 need for cumbersome dependency injection, making your code cleaner and more portable.
 
 🌟 **Effortless Integration**  
@@ -82,7 +82,7 @@ Minimal setup required! Just import the `ReporterModule` in your `AppModule`.
 
 ```typescript
 import { Module } from "@nestjs/common";
-import { ReporterModule } from 'nestjs-metrics-client';
+import { ReporterModule } from 'nestjs-metrics-reporter';
 
 @Module( {
      imports: [
@@ -122,7 +122,7 @@ Once initialized, you can start reporting metrics instantly from anywhere in you
 
 ```typescript
 import { Injectable } from '@nestjs/common';
-import { ReporterService } from 'nestjs-metrics-client';
+import { ReporterService } from 'nestjs-metrics-reporter';
 
 @Injectable()
 export class UserService {
