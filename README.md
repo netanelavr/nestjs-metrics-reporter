@@ -61,14 +61,16 @@ graph TD
 ## Why Choose `nestjs-metrics-reporter`?
 
 🚀 **No Dependency Injection**  
-Eliminates the need for cumbersome dependency injection, making your code cleaner and more portable.
+No need for cumbersome dependency injection, making your code much more cleaner.
 
 🌟 **Effortless Integration**  
-With zero setup, you can start tracking metrics immediately. No need to configure a service in every file—just use the
-global `ReporterService`.
+Start tracking metrics immediately with zero setup.
 
 🎯 **Focus on Simplicity**  
-Designed for developers who want powerful metrics without the complexity of managing dependencies or boilerplate code.
+Powerful metrics without the complexity of managing dependencies or boilerplate code.
+
+📤 **Pushgateway Support**  
+Easily push metrics to a Pushgateway server for batch job metrics.
 
 ---
 
