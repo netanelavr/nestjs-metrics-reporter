@@ -133,6 +133,12 @@ export class UserService {
                user_type: 'standard'
           } );
           
+          // Increment counter with custom value
+          ReporterService.counter( 'batch_users_created_total', {
+               source: 'batch',
+               user_type: 'standard'
+          }, 5 );
+          
           // Update active user gauge
           ReporterService.gauge( 'active_users', 42, {
                region: 'us-east-1'
@@ -152,7 +158,7 @@ The global static service for reporting metrics:
 
 | Method          | Description                 | Parameters                                                  |
 |-----------------|-----------------------------|-------------------------------------------------------------|
-| `counter()`     | Increment a counter metric  | `key: string, labels?: Record<string, string \| number>`                          
+| `counter()`     | Increment a counter metric  | `key: string, labels?: Record<string, string \| number>, value?: number = 1`                          
 | `gauge()`       | Set a gauge value           | `key: string, value: number, labels?: Record<string, string \| number>`           
 | `histogram()`   | Record a histogram value    | `key: string, value: number, labels?: Record<string, string \| number>, buckets?: number[]` 
 | `summary()`     | Record a summary value      | `key: string, value: number, labels?: Record<string, string \| number>, percentiles?: number[]`

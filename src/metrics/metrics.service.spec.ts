@@ -126,6 +126,25 @@ describe( 'MetricsService', () => {
 				service.incCounter( 'test_counter', { '': 'invalid' } );
 			} ).toThrow();
 		} );
+
+		it( 'should increment counter with custom value', async () => {
+			service.incCounter( 'test_counter', {}, 5 );
+			const metrics = await registry.metrics();
+			expect( metrics ).toContain( 'test_counter 5' );
+		} );
+
+		it( 'should increment counter with custom value and labels', async () => {
+			service.incCounter( 'test_counter', { method: 'GET' }, 3 );
+			const metrics = await registry.metrics();
+			expect( metrics ).toContain( 'test_counter{method="GET"} 3' );
+		} );
+
+		it( 'should accumulate custom values correctly', async () => {
+			service.incCounter( 'test_counter', { method: 'GET' }, 3 );
+			service.incCounter( 'test_counter', { method: 'GET' }, 2 );
+			const metrics = await registry.metrics();
+			expect( metrics ).toContain( 'test_counter{method="GET"} 5' );
+		} );
 	} );
      
 	describe( 'setGauge', () => {

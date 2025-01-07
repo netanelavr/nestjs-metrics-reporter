@@ -70,6 +70,25 @@ describe( 'ReporterService', () => {
 			const metrics = await registry.metrics();
 			expect( metrics ).toContain( 'test_counter 1' );
 		} );
+
+		it( 'should increment counter with custom value', async () => {
+			ReporterService.counter( 'test_counter', undefined, 5 );
+			const metrics = await registry.metrics();
+			expect( metrics ).toContain( 'test_counter 5' );
+		} );
+
+		it( 'should increment counter with custom value and labels', async () => {
+			ReporterService.counter( 'test_counter', { method: 'POST' }, 3 );
+			const metrics = await registry.metrics();
+			expect( metrics ).toContain( 'test_counter{method="POST"} 3' );
+		} );
+
+		it( 'should accumulate custom values correctly', async () => {
+			ReporterService.counter( 'test_counter', { method: 'POST' }, 3 );
+			ReporterService.counter( 'test_counter', { method: 'POST' }, 2 );
+			const metrics = await registry.metrics();
+			expect( metrics ).toContain( 'test_counter{method="POST"} 5' );
+		} );
 	} );
 	
 	describe( 'gauge', () => {

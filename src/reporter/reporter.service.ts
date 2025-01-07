@@ -12,9 +12,9 @@ export class ReporterService implements OnApplicationBootstrap {
 		ReporterService.metricsService = this.metrics;
 	}
 	
-	static counter( key: string, labels?: Record<string, string | number> ): void {
+	static counter( key: string, labels?: Record<string, string | number>, value: number = 1 ): void {
 		try {
-			ReporterService.metricsService.incCounter( key, labels );
+			ReporterService.metricsService.incCounter( key, labels, value );
 		} catch ( error ) {
 			this.logError( 'increment counter', key, labels, error );
 		}

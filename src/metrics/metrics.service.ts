@@ -25,7 +25,7 @@ export class MetricsService {
 		}
 	}
      
-	public incCounter( key: string, labels?: Record<string, string | number> ): void {
+	public incCounter( key: string, labels?: Record<string, string | number>, value: number = 1 ): void {
 		if ( ! this.counter[ key ] ) {
 			this.counter[ key ] = new Counter( {
 				name: key,
@@ -34,7 +34,7 @@ export class MetricsService {
 				registers: [ this.registry ],
 			} );
 		}
-		this.counter[ key ].inc( labels || {} );
+		this.counter[ key ].inc( labels || {}, value );
 	}
      
 	public setGauge( key: string, value: number, labels?: Record<string, string | number> ): void {
