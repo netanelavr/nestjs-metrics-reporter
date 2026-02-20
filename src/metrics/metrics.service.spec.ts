@@ -51,7 +51,7 @@ describe( 'MetricsService', () => {
      
 	describe( 'constructor', () => {
 		it( 'should initialize only in case a pushgateway URL is provided', () => {
-			expect( Pushgateway ).toHaveBeenCalledWith( 'http://test-pushgateway:9091', [], registry );
+			expect( Pushgateway ).toHaveBeenCalledWith( 'http://test-pushgateway:9091', {}, registry );
 		} );
 	} );
      

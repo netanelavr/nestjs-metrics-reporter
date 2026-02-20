@@ -19,7 +19,7 @@ export class MetricsService {
 		if ( this.config.pushgatewayUrl ) {
 			this.pushgateway = new Pushgateway(
 				this.config.pushgatewayUrl,
-				this.config.pushgatewayOptions || [],
+				this.config.pushgatewayOptions || {},
 				this.registry,
 			);
 		}
