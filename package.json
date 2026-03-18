@@ -73,11 +73,13 @@
     "typescript": "5.3"
   },
   "overrides": {
+    "file-type": ">=21.3.1",
     "glob": "^10.5.0",
     "js-yaml": ">=4.1.1",
-    "minimatch": ">=10.2.1",
-    "tar": ">=7.5.8",
-    "undici": ">=6.23.0"
+    "lodash": ">=4.17.22",
+    "minimatch": ">=10.2.3",
+    "tar": ">=7.5.11",
+    "undici": ">=7.24.0"
   },
   "publishConfig": {
     "access": "public"
