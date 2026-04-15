@@ -5,7 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "CONTRIBUTING.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=16.0.0"
