@@ -5,3 +5,8 @@ coverage/
 *.log
 .env
 .idea
+
+# Examples dependencies
+examples/*/node_modules/
+examples/*/dist/
+examples/*/.env
