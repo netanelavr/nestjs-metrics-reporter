@@ -3,8 +3,7 @@ import type { Config } from '@jest/types';
 const config: Config.InitialOptions = {
 	preset: 'ts-jest',
 	testEnvironment: 'node',
-	testMatch: ['<rootDir>/**/*.spec.ts'],
-	testPathIgnorePatterns: ['/node_modules/', '/examples/', '.*\\.e2e\\.spec\\.ts$'],
+	testMatch: ['<rootDir>/test/**/*.e2e.spec.ts'],
 	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
 	transform: {
 		'^.+\\.tsx?$': 'ts-jest',
@@ -13,11 +12,6 @@ const config: Config.InitialOptions = {
 		'^src/(.*)$': '<rootDir>/src/$1',
 	},
 	verbose: true,
-	collectCoverage: true,
-	coverageProvider: 'v8',
-	coverageDirectory: 'coverage',
-	coverageReporters: ['text', 'lcov', 'html'],
-	coveragePathIgnorePatterns: ['/node_modules/', '/examples/', '/dist/'],
 };
 
 export default config;
