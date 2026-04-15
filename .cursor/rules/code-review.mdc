@@ -1,0 +1,40 @@
+---
+description: Code review checklist for PRs
+globs: ["**/*.ts"]
+---
+
+# Code Review Checklist
+
+When reviewing or submitting code changes, verify:
+
+## Required Checks
+
+- [ ] All tests pass (`npm test`)
+- [ ] No linting errors (`npm run lint`)
+- [ ] Code is formatted (`npm run format:check`)
+- [ ] Build succeeds (`npm run build`)
+
+## Code Quality
+
+- [ ] No `any` types unless absolutely necessary
+- [ ] Functions have appropriate error handling
+- [ ] No console.log statements (use NestJS Logger if needed)
+- [ ] No hardcoded values that should be configurable
+
+## Metrics Best Practices
+
+- [ ] Metric names follow Prometheus naming conventions (snake_case, _total suffix for counters)
+- [ ] Labels are low-cardinality (avoid user IDs, timestamps as labels)
+- [ ] Histograms use appropriate bucket sizes for the use case
+
+## Testing
+
+- [ ] New features have corresponding unit tests
+- [ ] Edge cases are covered
+- [ ] Tests are deterministic (no flaky tests)
+
+## Documentation
+
+- [ ] README updated if public API changed
+- [ ] JSDoc comments for public methods
+- [ ] CHANGELOG entry if needed (managed by semantic-release)
