@@ -1,0 +1,78 @@
+---
+description: Rules for contributing to nestjs-metrics-reporter
+globs: ["src/**/*.ts", "test/**/*.ts"]
+---
+
+# NestJS Metrics Reporter - Development Rules
+
+## Project Overview
+
+This is a NestJS module that provides a zero-dependency-injection Prometheus metrics reporter. The key design principle is that `ReporterService` is a **static class** that can be used anywhere without injecting dependencies.
+
+## Code Style
+
+- Use **tabs** for indentation (not spaces)
+- Use **single quotes** for strings
+- Always use **semicolons**
+- Use **Prettier** for formatting (run `npm run format`)
+- Run `npm run lint:fix` before committing
+
+## Architecture Principles
+
+### Static Service Pattern
+- `ReporterService` uses static methods to allow metrics reporting from anywhere
+- The module initializes the service once, then static methods work globally
+- Never require dependency injection for basic metrics reporting
+
+### Module Configuration
+- Support both `forRoot()` (sync) and `forRootAsync()` (async with DI)
+- Always mark the module as `@Global()` so metrics are available everywhere
+- Export `ReporterService` from the module
+
+## Testing Guidelines
+
+### Unit Tests
+- Co-locate test files with implementation (`*.spec.ts` next to `*.ts`)
+- Mock `prom-client` Registry when needed
+- Test both forRoot and forRootAsync configurations
+
+### E2E Tests
+- Place in `test/` directory with `.e2e.spec.ts` suffix
+- Use supertest for HTTP endpoint testing
+- Test the `/metrics` endpoint responses
+
+## Commit Messages
+
+Use conventional commits:
+- `feat:` - New features (minor version bump)
+- `fix:` - Bug fixes (patch version bump)
+- `docs:` - Documentation only
+- `test:` - Adding tests
+- `refactor:` - Code changes without feature/fix
+- `chore:` - Maintenance tasks
+
+## File Structure
+
+```
+src/
+├── index.ts              # Public API exports
+├── constants.ts          # Injection tokens
+├── interfaces.ts         # TypeScript interfaces
+├── metrics/              # Metrics service and controller
+│   ├── metrics.service.ts
+│   ├── metrics.service.spec.ts
+│   ├── metrics.controller.ts
+│   └── metrics.controller.spec.ts
+└── reporter/             # Reporter module and service
+    ├── reporter.module.ts
+    ├── reporter.module.spec.ts
+    ├── reporter.service.ts
+    └── reporter.service.spec.ts
+```
+
+## Important Notes
+
+- The package has **prom-client** as its only runtime dependency
+- NestJS packages are **peer dependencies** (users must install them)
+- Support NestJS versions 7 through 11
+- The `/metrics` endpoint is automatically registered by MetricsController
