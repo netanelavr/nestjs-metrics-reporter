@@ -15,6 +15,7 @@ Effortlessly report metrics from anywhere in your codebase without complex setup
 [Overview](#overview) •
 [Quick Start](#quick-start) •
 [API Reference](#api-reference) •
+[Testing](#testing) •
 [Contributing](#contributing) •
 [License](#license)
 
@@ -234,6 +235,113 @@ test: message     # Adding or correcting tests
 ```
 
 Any other prefix will cause the commit to be ignored by semantic-release and won't appear anywhere in release notes.
+
+---
+
+## Testing
+
+### Unit Tests
+
+Run the test suite:
+
+```bash
+npm test
+```
+
+### Mocking ReporterService in Tests
+
+Since `ReporterService` uses static methods, you can mock it in your tests using Jest:
+
+```typescript
+// jest/setupFile.ts (optional - for global mocking)
+jest.mock('nestjs-metrics-reporter', () => ({
+  ReporterService: {
+    counter: jest.fn(),
+    gauge: jest.fn(),
+    histogram: jest.fn(),
+    summary: jest.fn(),
+    pushMetrics: jest.fn().mockResolvedValue(undefined),
+  },
+  ReporterModule: {
+    forRoot: jest.fn().mockReturnValue({
+      module: class MockReporterModule {},
+    }),
+    forRootAsync: jest.fn().mockReturnValue({
+      module: class MockReporterModule {},
+    }),
+  },
+}));
+```
+
+### Testing Services That Use ReporterService
+
+```typescript
+import { ReporterService } from 'nestjs-metrics-reporter';
+import { UserService } from './user.service';
+
+jest.mock('nestjs-metrics-reporter');
+
+describe('UserService', () => {
+  let service: UserService;
+  
+  beforeEach(() => {
+    jest.clearAllMocks();
+    service = new UserService();
+  });
+
+  it('should increment counter when creating user', async () => {
+    await service.createUser({ email: 'test@example.com' });
+
+    expect(ReporterService.counter).toHaveBeenCalledWith(
+      'users_created_total',
+      expect.objectContaining({ source: 'api' })
+    );
+  });
+
+  it('should update gauge for active users', async () => {
+    await service.updateActiveUsers(42);
+
+    expect(ReporterService.gauge).toHaveBeenCalledWith(
+      'active_users',
+      42,
+      expect.any(Object)
+    );
+  });
+});
+```
+
+### Testing with NestJS Testing Module
+
+For integration tests, you can use the NestJS testing utilities:
+
+```typescript
+import { Test, TestingModule } from '@nestjs/testing';
+import { ReporterModule, ReporterService } from 'nestjs-metrics-reporter';
+
+describe('Integration Test', () => {
+  let module: TestingModule;
+
+  beforeEach(async () => {
+    module = await Test.createTestingModule({
+      imports: [
+        ReporterModule.forRoot({
+          defaultMetricsEnabled: false,
+          defaultLabels: { env: 'test' },
+        }),
+      ],
+    }).compile();
+  });
+
+  afterEach(async () => {
+    await module.close();
+  });
+
+  it('should report metrics', () => {
+    ReporterService.counter('test_metric', { action: 'test' });
+    // Metrics are recorded - verify via /metrics endpoint if needed
+  });
+});
+```
 
 ---
 
