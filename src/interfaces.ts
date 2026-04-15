@@ -3,7 +3,7 @@ import { Type } from '@nestjs/common';
 export interface MetricsConfig {
 	defaultLabels?: Record<string, string>;
 	defaultMetricsEnabled?: boolean;
-	interceptors?: Type<any>[]
+	interceptors?: Type<any>[];
 	pushgatewayUrl?: string;
 	pushgatewayOptions?: {
 		timeout?: number;
@@ -17,9 +17,9 @@ export interface MetricsConfig {
 
 export interface ReporterAsyncOptions {
 	imports?: any[];
-	useFactory: ( ...args: any[] )=> Promise<MetricsConfig> | MetricsConfig;
+	useFactory: (...args: any[]) => Promise<MetricsConfig> | MetricsConfig;
 	inject?: any[];
-  }
+}
 
 export interface PushgatewayResponse {
 	status: number;

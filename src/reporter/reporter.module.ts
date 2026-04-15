@@ -8,38 +8,40 @@ import { CONFIG_OPTIONS } from '../constants';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Global()
-@Module( {} )
+@Module({})
 export class ReporterModule {
-	static forRoot( config: MetricsConfig = {} ): DynamicModule {
-		const registry: Registry = this.configureRegistry( config );
+	static forRoot(config: MetricsConfig = {}): DynamicModule {
+		const registry: Registry = this.configureRegistry(config);
 		const providers: Provider[] = [
 			{
 				provide: Registry,
-				useValue: registry
+				useValue: registry,
 			},
 			{
 				provide: CONFIG_OPTIONS,
-				useValue: config
+				useValue: config,
 			},
 			MetricsService,
-			ReporterService
+			ReporterService,
 		];
-		
-		if ( config.interceptors ) {
-			providers.push( ...config.interceptors.map( interceptor => ( {
-				provide: APP_INTERCEPTOR,
-				useClass: interceptor as Type<any>,
-			} ) ) );
+
+		if (config.interceptors) {
+			providers.push(
+				...config.interceptors.map((interceptor) => ({
+					provide: APP_INTERCEPTOR,
+					useClass: interceptor as Type<any>,
+				}))
+			);
 		}
 		return {
 			module: ReporterModule,
 			providers,
-			controllers: [ MetricsController ],
-			exports: [ ReporterService ]
+			controllers: [MetricsController],
+			exports: [ReporterService],
 		};
 	}
- 
-	static forRootAsync( options: ReporterAsyncOptions ): DynamicModule {
+
+	static forRootAsync(options: ReporterAsyncOptions): DynamicModule {
 		return {
 			module: ReporterModule,
 			imports: options.imports,
@@ -51,30 +53,30 @@ export class ReporterModule {
 				},
 				{
 					provide: Registry,
-					useFactory: async ( config: MetricsConfig ) => {
-						return ReporterModule.configureRegistry( config );
+					useFactory: async (config: MetricsConfig) => {
+						return ReporterModule.configureRegistry(config);
 					},
-					inject: [ CONFIG_OPTIONS ],
+					inject: [CONFIG_OPTIONS],
 				},
 				MetricsService,
-				ReporterService
+				ReporterService,
 			],
-			controllers: [ MetricsController ],
-			exports: [ ReporterService ]
+			controllers: [MetricsController],
+			exports: [ReporterService],
 		};
 	}
-     
-	private static configureRegistry( config: MetricsConfig = {} ): Registry {
+
+	private static configureRegistry(config: MetricsConfig = {}): Registry {
 		const registry: Registry = new Registry();
-          
-		if ( config.defaultLabels ) {
-			registry.setDefaultLabels( config.defaultLabels );
+
+		if (config.defaultLabels) {
+			registry.setDefaultLabels(config.defaultLabels);
 		}
-          
-		if ( config.defaultMetricsEnabled ) {
-			collectDefaultMetrics( { register: registry } );
+
+		if (config.defaultMetricsEnabled) {
+			collectDefaultMetrics({ register: registry });
 		}
-          
+
 		return registry;
 	}
 }
